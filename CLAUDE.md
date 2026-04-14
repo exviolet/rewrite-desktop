@@ -2,13 +2,13 @@
 
 ## Project Overview
 
-RewriteBox Desktop — Tauri v2 обёртка для browser SPA [rewritebox](https://github.com/exviolet/rewritebox). Web-приложение подключено как git submodule в `web/`.
+Rewrite Desktop — Tauri v2 обёртка для browser SPA [rewrite](https://github.com/exviolet/rewrite). Web-приложение подключено как git submodule в `web/`.
 
 ## Architecture
 
 ```
-rewritebox-desktop/
-├── web/                    # git submodule → rewritebox (browser SPA)
+rewrite-desktop/
+├── web/                    # git submodule → rewrite (browser SPA)
 ├── src-tauri/
 │   ├── src/
 │   │   ├── lib.rs          # Tauri entry point
@@ -18,7 +18,7 @@ rewritebox-desktop/
 │   ├── icons/              # иконки приложения
 │   ├── tauri.conf.json     # конфигурация Tauri
 │   └── Cargo.toml
-├── com.rewritebox.app.desktop  # .desktop файл для Linux
+├── com.rewrite.app.desktop  # .desktop файл для Linux
 ├── install.sh                  # установка в ~/.local/
 ├── uninstall.sh                # удаление
 ├── package.json

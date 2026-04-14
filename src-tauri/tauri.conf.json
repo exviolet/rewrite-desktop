@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "RewriteBox",
+  "productName": "Rewrite",
   "version": "0.1.0",
-  "identifier": "com.rewritebox.app",
+  "identifier": "com.rewrite.app",
   "build": {
     "frontendDist": "../web/dist",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "RewriteBox",
+        "title": "Rewrite",
         "decorations": false,
         "width": 1200,
         "height": 800,

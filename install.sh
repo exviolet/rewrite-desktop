@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-BINARY="src-tauri/target/release/rewritebox-desktop"
+BINARY="src-tauri/target/release/rewrite-desktop"
 ICON="src-tauri/icons/icon.png"
-DESKTOP="com.rewritebox.app.desktop"
+DESKTOP="com.rewrite.app.desktop"
 
 if [ ! -f "$BINARY" ]; then
   echo "Бинарник не найден. Сначала запусти: bun run build"
@@ -14,17 +14,17 @@ mkdir -p ~/.local/bin
 mkdir -p ~/.local/share/applications
 mkdir -p ~/.local/share/icons/hicolor/256x256/apps
 
-cp "$BINARY" ~/.local/bin/rewritebox-desktop
-chmod +x ~/.local/bin/rewritebox-desktop
+cp "$BINARY" ~/.local/bin/rewrite-desktop
+chmod +x ~/.local/bin/rewrite-desktop
 
-cp "$ICON" ~/.local/share/icons/hicolor/256x256/apps/rewritebox.png
+cp "$ICON" ~/.local/share/icons/hicolor/256x256/apps/rewrite.png
 
-sed "s|Exec=rewritebox-desktop|Exec=$HOME/.local/bin/rewritebox-desktop|" "$DESKTOP" \
-  > ~/.local/share/applications/com.rewritebox.app.desktop
+sed "s|Exec=rewrite-desktop|Exec=$HOME/.local/bin/rewrite-desktop|" "$DESKTOP" \
+  > ~/.local/share/applications/com.rewrite.app.desktop
 
-echo "RewriteBox установлен:"
-echo "  Бинарник: ~/.local/bin/rewritebox-desktop"
-echo "  Иконка:   ~/.local/share/icons/hicolor/256x256/apps/rewritebox.png"
-echo "  Desktop:  ~/.local/share/applications/com.rewritebox.app.desktop"
+echo "Rewrite установлен:"
+echo "  Бинарник: ~/.local/bin/rewrite-desktop"
+echo "  Иконка:   ~/.local/share/icons/hicolor/256x256/apps/rewrite.png"
+echo "  Desktop:  ~/.local/share/applications/com.rewrite.app.desktop"
 echo ""
 echo "Убедись что ~/.local/bin есть в PATH."

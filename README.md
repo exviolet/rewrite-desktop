@@ -1,6 +1,6 @@
-# RewriteBox Desktop
+# Rewrite Desktop
 
-Нативная desktop-обёртка для [RewriteBox](https://github.com/exviolet/rewritebox) на базе Tauri v2.
+Нативная desktop-обёртка для [Rewrite](https://github.com/exviolet/rewrite) на базе Tauri v2.
 
 ## Возможности
 
@@ -21,8 +21,8 @@
 ## Установка
 
 ```bash
-git clone --recurse-submodules git@github.com:exviolet/rewritebox-desktop.git
-cd rewritebox-desktop
+git clone --recurse-submodules git@github.com:exviolet/rewrite-desktop.git
+cd rewrite-desktop
 bun install
 ```
 

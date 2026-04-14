@@ -1,9 +1,9 @@
 [Desktop Entry]
-Name=RewriteBox
+Name=Rewrite
 Comment=Minimal text editor with bulk replacements
-Exec=rewritebox-desktop
-Icon=rewritebox
+Exec=rewrite-desktop
+Icon=rewrite
 Type=Application
 Categories=Utility;TextEditor;
-StartupWMClass=RewriteBox
+StartupWMClass=Rewrite
 Terminal=false

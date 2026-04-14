@@ -1,10 +1,10 @@
 [package]
-name = "rewritebox-desktop"
+name = "rewrite-desktop"
 version = "0.1.0"
-description = "RewriteBox — desktop wrapper via Tauri v2"
+description = "Rewrite — desktop wrapper via Tauri v2"
 authors = ["exviolet"]
 license = "MIT"
-repository = "https://github.com/exviolet/rewritebox-desktop"
+repository = "https://github.com/exviolet/rewrite-desktop"
 edition = "2021"
 rust-version = "1.77.2"
 
