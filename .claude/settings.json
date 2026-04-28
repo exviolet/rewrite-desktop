@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(bun tsc --noEmit*)",
+      "Bash(bun lint*)",
+      "Bash(cargo check*)"
+    ]
+  },
+  "disabledMcpjsonServers": [
+    "claude_ai_Gmail",
+    "claude_ai_Google_Calendar",
+    "claude_ai_Google_Drive",
+    "claude_ai_Spotify",
+    "claude_ai_Uber",
+    "pencil",
+    "primeng"
+  ],
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/pre-commit-verify.sh",
+            "timeout": 90,
+            "statusMessage": "Verifying web/ tsc + lint…"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/stop-handoff-reminder.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

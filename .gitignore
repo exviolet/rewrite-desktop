@@ -22,3 +22,6 @@ bun.lockb
 
 # handoff (не коммитить)
 HANDOFF.md
+
+# Claude Code — личные настройки (settings.json и hooks/ коммитятся)
+.claude/settings.local.json
