@@ -44,7 +44,7 @@
 | 3 | Tab Switcher Preview Panel | [tasks/03-tab-switcher-preview-panel.md](../tasks/03-tab-switcher-preview-panel.md) | done |
 | 4 | Floating reference panel | [tasks/04-floating-reference-panel.md](../tasks/04-floating-reference-panel.md) | done |
 | 5 | Bulk Find & Replace с preview | [tasks/05-bulk-find-replace-preview.md](../tasks/05-bulk-find-replace-preview.md) | done |
-| 6 | Global Tab Search (`Ctrl+Shift+F`) | [tasks/06-global-tab-search.md](../tasks/06-global-tab-search.md) | active |
+| 6 | Global Tab Search (`Ctrl+Shift+D`) | [tasks/06-global-tab-search.md](../tasks/06-global-tab-search.md) | done |
 | 7 | Workspaces | — | conditional — **только если #2/#3/#6 не решат хаос 75 Untitled** |
 
 Файлы задач создаются в `tasks/` по мере того как фича становится active. YAGNI: не создавать stub-файлы для будущих приоритетов заранее.

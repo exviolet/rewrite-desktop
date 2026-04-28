@@ -1,6 +1,6 @@
 # Task 06 — global tab search
 
-**Status:** active
+**Status:** done
 **Priority:** #6 (см. [docs/ROADMAP.md](../docs/ROADMAP.md))
 **Owner:** human-planner (Claude Opus) + executor (Codex)
 
@@ -12,17 +12,17 @@
 
 ## Acceptance criteria
 
-- [ ] `Ctrl+Shift+D` открывает global search UI.
-- [ ] Поиск идёт по content всех открытых табов.
-- [ ] Results grouped by tab: title, номер таба, count matches.
-- [ ] Для каждого совпадения показывается snippet вокруг match.
-- [ ] Match в snippet визуально подсвечен.
-- [ ] Click/Enter по result открывает соответствующий tab.
-- [ ] После перехода editor подсвечивает конкретный match.
-- [ ] Поддерживаются `caseSensitive` и `regex`, как в локальном find.
-- [ ] Empty query показывает спокойный empty-state, не список всех табов.
-- [ ] No matches показывает compact empty-state.
-- [ ] `ShortcutsModal` отображает `Ctrl+Shift+D`.
+- [x] `Ctrl+Shift+D` открывает global search UI.
+- [x] Поиск идёт по content всех открытых табов.
+- [x] Results grouped by tab: title, номер таба, count matches.
+- [x] Для каждого совпадения показывается snippet вокруг match.
+- [x] Match в snippet визуально подсвечен.
+- [x] Click/Enter по result открывает соответствующий tab.
+- [x] После перехода editor подсвечивает конкретный match.
+- [x] Поддерживаются `caseSensitive` и `regex`, как в локальном find.
+- [x] Empty query показывает спокойный empty-state, не список всех табов.
+- [x] No matches показывает compact empty-state.
+- [x] `ShortcutsModal` отображает `Ctrl+Shift+D`.
 
 ## Scope
 
@@ -112,4 +112,5 @@ cd web && bun run build
 
 - Acceptance criteria checked.
 - `cd web && bun tsc --noEmit && bun lint` — clean.
+- `cd web && bun run build` — clean.
 - Manual test plan пройден.
