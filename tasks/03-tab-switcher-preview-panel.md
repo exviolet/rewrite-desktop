@@ -1,6 +1,6 @@
 # Task 03 — tab switcher preview panel
 
-**Status:** active
+**Status:** done
 **Priority:** #3 (см. [docs/ROADMAP.md](../docs/ROADMAP.md))
 **Owner:** human-planner (Claude Opus) + executor (Codex)
 
@@ -12,14 +12,14 @@
 
 ## Acceptance criteria
 
-- [ ] На desktop-width `TabSwitcher` показывает список табов и отдельную preview-панель выбранного таба.
-- [ ] Preview обновляется сразу при `ArrowUp` / `ArrowDown` и hover по результатам.
-- [ ] Preview показывает достаточно контента выбранного таба, чтобы визуально проверить prompt без открытия таба.
-- [ ] Если query совпал с content, preview показывает фрагмент вокруг найденного совпадения, а не только первую строку.
-- [ ] Совпадение в preview визуально подсвечивается.
-- [ ] Empty tab имеет спокойный empty-state в preview.
-- [ ] На narrow/mobile width layout остаётся одноколоночным и не ломает навигацию.
-- [ ] Keyboard flow остаётся прежним: `Ctrl+T`, `ArrowUp/ArrowDown`, `Enter`, `Escape`.
+- [x] На desktop-width `TabSwitcher` показывает список табов и отдельную preview-панель выбранного таба.
+- [x] Preview обновляется сразу при `ArrowUp` / `ArrowDown` и hover по результатам.
+- [x] Preview показывает достаточно контента выбранного таба, чтобы визуально проверить prompt без открытия таба.
+- [x] Если query совпал с content, preview показывает фрагмент вокруг найденного совпадения, а не только первую строку.
+- [x] Совпадение в preview визуально подсвечивается.
+- [x] Empty tab имеет спокойный empty-state в preview.
+- [x] На narrow/mobile width layout остаётся одноколоночным и не ломает навигацию.
+- [x] Keyboard flow остаётся прежним: `Ctrl+T`, `ArrowUp/ArrowDown`, `Enter`, `Escape`.
 
 ## Scope
 
@@ -99,4 +99,5 @@ cd web && bun run build
 
 - Acceptance criteria checked.
 - `cd web && bun tsc --noEmit && bun lint` — clean.
+- `cd web && bun run build` — clean.
 - Manual test plan пройден на реальной сессии с большим количеством табов.
