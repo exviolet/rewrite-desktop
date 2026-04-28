@@ -1,6 +1,6 @@
 # Task 05 — bulk find & replace with preview
 
-**Status:** active
+**Status:** done
 **Priority:** #5 (см. [docs/ROADMAP.md](../docs/ROADMAP.md))
 **Owner:** human-planner (Claude Opus) + executor (Codex)
 
@@ -12,16 +12,16 @@
 
 ## Acceptance criteria
 
-- [ ] В `FindReplacePanel` есть режим bulk replace для активного таба.
-- [ ] Можно добавить, удалить и редактировать несколько replacement pairs.
-- [ ] Каждая пара поддерживает `from`, `to`, `caseSensitive`, `wholeWord`.
-- [ ] Bulk preview показывает, какие пары сработают и сколько замен будет сделано.
-- [ ] Preview считается без изменения текущего prompt.
-- [ ] Apply применяет все пары последовательно к активному табу одним `updateContent()`.
-- [ ] Если совпадений нет, apply disabled или показывает non-destructive state.
-- [ ] Empty `from` pairs игнорируются.
-- [ ] Existing single find/replace flow остаётся рабочим.
-- [ ] Shortcut/entry point остаётся `Ctrl+H`; отдельный глобальный shortcut не нужен.
+- [x] В `FindReplacePanel` есть режим bulk replace для активного таба.
+- [x] Можно добавить, удалить и редактировать несколько replacement pairs.
+- [x] Каждая пара поддерживает `from`, `to`, `caseSensitive`, `wholeWord`.
+- [x] Bulk preview показывает, какие пары сработают и сколько замен будет сделано.
+- [x] Preview считается без изменения текущего prompt.
+- [x] Apply применяет все пары последовательно к активному табу одним `updateContent()`.
+- [x] Если совпадений нет, apply disabled или показывает non-destructive state.
+- [x] Empty `from` pairs игнорируются.
+- [x] Existing single find/replace flow остаётся рабочим.
+- [x] Shortcut/entry point остаётся `Ctrl+H`; отдельный глобальный shortcut не нужен.
 
 ## Scope
 
@@ -89,4 +89,5 @@ cd web && bun run build
 
 - Acceptance criteria checked.
 - `cd web && bun tsc --noEmit && bun lint` — clean.
+- `cd web && bun run build` — clean.
 - Manual test plan пройден.
