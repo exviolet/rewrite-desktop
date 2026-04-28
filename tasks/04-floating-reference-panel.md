@@ -1,6 +1,6 @@
 # Task 04 — floating reference panel
 
-**Status:** active
+**Status:** done
 **Priority:** #4 (см. [docs/ROADMAP.md](../docs/ROADMAP.md))
 **Owner:** human-planner (Claude Opus) + executor (Codex)
 
@@ -25,14 +25,14 @@
 
 ## Acceptance criteria
 
-- [ ] В UI есть reference panel, открываемая отдельной командой/shortcut.
-- [ ] Panel можно открыть и закрыть без потери текста в текущей сессии.
-- [ ] В panel есть textarea для свободного reference-текста.
-- [ ] Текст reference сохраняется между перезапусками вместе с local app state.
-- [ ] Panel не меняет содержимое активного prompt сама по себе.
-- [ ] Editor остаётся usable при открытой panel: layout не перекрывает основной textarea.
-- [ ] Есть быстрый action “вставить reference в prompt” или “скопировать reference в clipboard” — выбрать самый простой вариант по существующим APIs.
-- [ ] Shortcut отображается в `ShortcutsModal`.
+- [x] В UI есть reference panel, открываемая отдельной командой/shortcut.
+- [x] Panel можно открыть и закрыть без потери текста в текущей сессии.
+- [x] В panel есть textarea для свободного reference-текста.
+- [x] Текст reference сохраняется между перезапусками вместе с local app state.
+- [x] Panel не меняет содержимое активного prompt сама по себе.
+- [x] Editor остаётся usable при открытой panel: layout не перекрывает основной textarea.
+- [x] Есть быстрый action “вставить reference в prompt” или “скопировать reference в clipboard” — выбрать самый простой вариант по существующим APIs.
+- [x] Shortcut отображается в `ShortcutsModal`.
 
 ## Scope
 
@@ -109,4 +109,5 @@ cd web && bun run build
 
 - Acceptance criteria checked.
 - `cd web && bun tsc --noEmit && bun lint` — clean.
+- `cd web && bun run build` — clean.
 - Manual test plan пройден.
