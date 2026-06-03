@@ -63,7 +63,7 @@
 ## Safety Rails
 
 ### NEVER
-- Не добавлять Tauri permissions в `src-tauri/capabilities/default.json` без явного подтверждения. Модель: local-first, без доступа к сети и процессам. Исключение: `tmux` разрешён через `tauri-plugin-shell` только для отправки текста в выбранную pane; остальной shell, сеть и произвольные процессы не разрешены.
+- Не добавлять Tauri permissions в `src-tauri/capabilities/default.json` без явного подтверждения. Модель: local-first, без доступа к сети и процессам. Исключение: `tmux` разрешён через `tauri-plugin-shell` для отправки текста в выбранную pane и чтения топологии read-only (`list-panes`/`list-windows`/`list-sessions` — для target picker'а); остальной shell, сеть и произвольные процессы не разрешены.
 - Не делать `git push --force` на `master`.
 - Не запускать `./uninstall.sh` без подтверждения (стирает установленный бинарник).
 - Не коммитить `HANDOFF.md`.
