@@ -46,8 +46,20 @@
 | 5 | Bulk Find & Replace с preview | [tasks/05-bulk-find-replace-preview.md](../tasks/05-bulk-find-replace-preview.md) | done |
 | 6 | Global Tab Search (`Ctrl+Shift+D`) | [tasks/06-global-tab-search.md](../tasks/06-global-tab-search.md) | done |
 | 7 | Workspaces | — | conditional — **только если #2/#3/#6 не решат хаос 75 Untitled** |
+| 8 | tmux target picker (`Ctrl+Shift+Enter` → выбор session/window/pane с именами) | [tasks/07-tmux-picker.md](../tasks/07-tmux-picker.md) | active |
+| 9 | tmux tab-binding (таб → окно по `session:window` имени, цепочка Explicit→Last→Modal) | — | queued — после догфуда #8 |
+| 10 | Pin/unpin табов (`Ctrl+P` = pin/toggle, command palette → `Ctrl+Shift+P`) | — | queued |
+| 11 | Reference panel → live tab (указать на живой таб вместо снапшота; замена split-view) | — | queued |
 
 Файлы задач создаются в `tasks/` по мере того как фича становится active. YAGNI: не создавать stub-файлы для будущих приоритетов заранее.
+
+### Решения grill-сессии 2026-06-03 (tmux deep integration + tab UX)
+
+- **Split-view отклонён** — дублирует существующую reference panel (`Ctrl+R`, уже side-by-side) и дрейфует в code-editor/IDE (анти-позиционирование). Заменён на #11: апгрейд reference panel до указания на живой таб.
+- **tmux tab-binding (#9) биндит по имени `session:window`, НЕ по `@id`.** Window/pane `@id` эфемерны — ресетятся при рестарте tmux-сервера (ребут), поэтому persistent-привязка к `@id` протухает ровно как global-last (который сознательно НЕ персистится). Дескриптор `{session_name, window_name}` резолвится живьём в момент отправки; если окно не найдено → модалка + toast. Цена: давать агентским окнам стабильные имена (`tmux rename-window claude`).
+- **«Active pane» как тихий дефолт `Ctrl+Enter` уходит в #9.** Цепячка резолва — Explicit (tab-binding) → Last (global, in-memory) → Modal (fallback). «Active pane» остаётся лишь пунктом *внутри* модалки. В #8 `Ctrl+Enter` пока не трогается (чисто аддитивная фаза).
+- **Persistence split (#9):** tab-binding → IndexedDB (переживает ребут); last-global-target → Zustand in-memory (протухает с сессией, персистить вредно).
+- **Settings (#9):** два тумблера (`remember last globally` = on, `auto-bind on pick` = off) — захардкодить дефолтами, выносить в Settings-UI только если догфуд покажет потребность флипать. Не строить панель под пустоту.
 
 ## Отложенные идеи (не сейчас, требуют предусловий)
 
