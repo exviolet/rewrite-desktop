@@ -1,24 +1,47 @@
+<div align="center">
+
+<img src="icon.svg" alt="Rewrite Desktop" width="112" height="112" />
+
 # Rewrite Desktop
 
-Нативная desktop-обёртка для [Rewrite](https://github.com/exviolet/rewrite) на базе Tauri v2.
+**Native desktop wrapper for [Rewrite](https://github.com/exviolet/rewrite) — built on Tauri v2.**
 
-## Возможности
+<img src="https://img.shields.io/badge/license-MIT-8b5cf6?style=for-the-badge" alt="License MIT" />
+<img src="https://img.shields.io/badge/platform-Linux-c4b5fd?style=for-the-badge" alt="Platform: Linux" />
+<img src="https://img.shields.io/badge/status-personal_project-2a2650?style=for-the-badge" alt="Status: personal project" />
 
-- Нативные файловые диалоги (открытие, сохранение, экспорт/импорт)
-- Кастомный title bar с window controls
-- Восстановление закрытых табов (Ctrl+Shift+T)
-- Глобальные toast-уведомления
-- Все возможности браузерной версии: табы, Find & Replace, пресеты замен, AI Prompt Builder, Markdown превью
+English · [Русский](README.ru.md)
 
-## Требования
+</div>
 
-- [Bun](https://bun.sh/) >= 1.0
-- [Rust](https://rustup.rs/) stable
-- Системные зависимости Tauri:
-  - **Arch Linux**: `webkit2gtk-4.1`, `gtk3`, `libsoup3`
+This repo is the thin native shell around the [Rewrite](https://github.com/exviolet/rewrite)
+web app (included here as a git submodule). For what Rewrite *is* — the
+prompt-first workflow, features, and screenshots — read the
+[**web README**](https://github.com/exviolet/rewrite#readme). This file only
+covers building and installing the native binary.
+
+## What the wrapper adds
+
+- Native file dialogs (open / save / import / export).
+- Custom title bar with window controls.
+- Reopen closed tabs (`Ctrl+Shift+T`).
+- Global toast notifications.
+- `tmux` send (`Ctrl+Enter`) via `tauri-plugin-shell` — the desktop build's
+  reason to exist.
+
+Everything else is the full browser feature set.
+
+## Requirements
+
+- [Bun](https://bun.sh/) ≥ 1.0
+- [Rust](https://rustup.rs/) (stable)
+- Tauri system dependencies (Linux):
+  - **Arch**: `webkit2gtk-4.1`, `gtk3`, `libsoup3`
   - **Ubuntu/Debian**: `libwebkit2gtk-4.1-dev`, `libgtk-3-dev`, `libsoup-3.0-dev`
 
-## Установка
+> Linux-only by design. No Windows/macOS builds, no auto-update.
+
+## Setup
 
 ```bash
 git clone --recurse-submodules git@github.com:exviolet/rewrite-desktop.git
@@ -26,33 +49,34 @@ cd rewrite-desktop
 bun install
 ```
 
-## Разработка
+## Develop
 
 ```bash
-bun dev       # Vite dev server + Tauri window
+bun dev      # Vite dev server + Tauri window
 ```
 
-## Сборка и установка
+## Build & install
 
 ```bash
-bun run build     # Production build
-./install.sh      # Установить в ~/.local/ (бинарник + .desktop + иконка)
+bun run build     # production build
+./install.sh      # install to ~/.local/ (binary + .desktop + icon)
+./uninstall.sh    # remove
 ```
 
-После установки приложение доступно из rofi/app launcher.
+After `install.sh` the app shows up in rofi / your app launcher.
+
+## Updating the web submodule
 
 ```bash
-./uninstall.sh    # Удалить
+bun update-web                                  # pull latest web/ commit
+git add web && git commit -m "chore: bump web submodule"
 ```
 
-## Обновление web
+## Status
 
-```bash
-bun update-web    # Обновить submodule до последней версии
-git add web
-git commit -m "chore: обновлён web submodule"
-```
+A personal tool on `v0.1.x`, used daily on Linux. Public as a portfolio piece —
+**it works for me, but no support or stability is guaranteed.**
 
-## Лицензия
+## License
 
 MIT
