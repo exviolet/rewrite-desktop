@@ -46,7 +46,7 @@
 | 5 | Bulk Find & Replace с preview | [tasks/05-bulk-find-replace-preview.md](../tasks/05-bulk-find-replace-preview.md) | done |
 | 6 | Global Tab Search (`Ctrl+Shift+D`) | [tasks/06-global-tab-search.md](../tasks/06-global-tab-search.md) | done |
 | 7 | Workspaces | — | conditional — **только если #2/#3/#6 не решат хаос 75 Untitled** |
-| 8 | tmux target picker (`Ctrl+Shift+Enter` → выбор session/window/pane с именами) | [tasks/07-tmux-picker.md](../tasks/07-tmux-picker.md) | active |
+| 8 | tmux target picker (`Ctrl+Shift+Enter` → выбор session/window/pane с именами) | [tasks/07-tmux-picker.md](../tasks/07-tmux-picker.md) | done |
 | 9 | tmux tab-binding (таб → окно по `session:window` имени, цепочка Explicit→Last→Modal) | — | queued — после догфуда #8 |
 | 10 | Pin/unpin табов (`Ctrl+P` = pin/toggle, command palette → `Ctrl+Shift+P`) | — | queued |
 | 11 | Reference panel → live tab (указать на живой таб вместо снапшота; замена split-view) | — | queued |
@@ -90,5 +90,11 @@
 - **`rewrite-cli` архитектура** — что такое `@rewrite/core`. Какие функции реально shared между GUI и CLI. Решить перед стартом CLI.
 
 ## Известные ограничения
+
+- **tmux-отправка в TUI с эвристикой «вставка vs ввод» (codex и подобные)** —
+  требует `paste-buffer -p` (bracketed paste) + settle-задержку перед `send-keys
+  Enter`, иначе приложение глотает Enter как часть пасты и сабмит не происходит
+  (первый раз проходит по гонке, повторные виснут). Исправлено в `useTmuxSend`
+  (2026-06-03). Claude Code / pi.dev работали и без `-p`.
 
 - **Системная тема через `gsettings color-scheme` / nwg-look** — применяется только после рестарта приложения. Это ограничение WebKitGTK на Linux, не наш баг. Смена через GTK-вариант темы (например Graphite → Graphite-Dark) работает мгновенно. Пользователь явно выбрал не реализовывать D-Bus listener (вариант 1 «оставить как есть»).

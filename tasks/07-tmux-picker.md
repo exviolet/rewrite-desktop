@@ -1,6 +1,6 @@
 # Task 07 — tmux target picker
 
-**Status:** active
+**Status:** done
 **Priority:** #8 (см. [docs/ROADMAP.md](../docs/ROADMAP.md))
 **Owner:** human-planner (Claude Opus) + executor (Codex)
 
@@ -25,21 +25,21 @@
 
 ## Acceptance criteria
 
-- [ ] `Ctrl+Shift+Enter` открывает модалку выбора tmux-таргета.
-- [ ] Модалка показывает дерево: session → window → pane.
-- [ ] Для окна виден `window_name` и `pane_current_command` (чтобы отличить
+- [x] `Ctrl+Shift+Enter` открывает модалку выбора tmux-таргета.
+- [x] Модалка показывает дерево: session → window → pane.
+- [x] Для окна виден `window_name` и `pane_current_command` (чтобы отличить
       `claude` от `codex` от `zsh`).
-- [ ] Активное окно/pane визуально помечены.
-- [ ] Выбор таргета (`Enter` / клик) отправляет текущий буфер туда — через
+- [x] Активное окно/pane визуально помечены.
+- [x] Выбор таргета (`Enter` / клик) отправляет текущий буфер туда — через
       существующий `set-buffer` → `paste-buffer` → `send-keys` flow.
-- [ ] Последний выбранный таргет запоминается **in-memory** (Zustand, без
+- [x] Последний выбранный таргет запоминается **in-memory** (Zustand, без
       персиста) и пре-выделяется при следующем открытии модалки.
-- [ ] `ArrowUp/ArrowDown` навигация по строкам, `Enter` выбор, `Escape` закрытие.
-- [ ] Фильтр-input для быстрого поиска по имени окна/команды.
-- [ ] tmux не запущен / нет сессий → спокойный empty-state + toast, не краш.
-- [ ] В браузере (не Tauri) `Ctrl+Shift+Enter` ведёт себя как текущий fallback
+- [x] `ArrowUp/ArrowDown` навигация по строкам, `Enter` выбор, `Escape` закрытие.
+- [x] Фильтр-input для быстрого поиска по имени окна/команды.
+- [x] tmux не запущен / нет сессий → спокойный empty-state + toast, не краш.
+- [x] В браузере (не Tauri) `Ctrl+Shift+Enter` ведёт себя как текущий fallback
       (clipboard) либо no-op с info-toast — не пытаться звать shell.
-- [ ] `ShortcutsModal` отображает `Ctrl+Shift+Enter`.
+- [x] `ShortcutsModal` отображает `Ctrl+Shift+Enter`.
 
 ## Scope
 
