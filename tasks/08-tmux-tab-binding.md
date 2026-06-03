@@ -1,6 +1,6 @@
 # Task 08 — tmux tab-binding + resolution chain
 
-**Status:** active
+**Status:** done
 **Priority:** #9 (см. [docs/ROADMAP.md](../docs/ROADMAP.md))
 **Owner:** human-planner (Claude Opus) + executor (Claude Code)
 
@@ -31,21 +31,25 @@ Codex».
 
 ## Acceptance criteria
 
-- [ ] У `Tab` есть опциональное `tmuxBinding: { session, window }`; экшен
+- [x] У `Tab` есть опциональное `tmuxBinding: { session, window }`; экшен
       `setTabBinding(id, binding | null)`.
-- [ ] Контекстное меню таба: «Привязать к tmux-окну…» открывает picker в
+- [x] Контекстное меню таба: «Привязать к tmux-окну…» открывает picker в
       bind-режиме; на выбор — таб привязывается (не отправка).
-- [ ] Если таб уже привязан — пункт «Отвязать от tmux (`window`)».
-- [ ] Привязанный таб визуально помечен в табстрипе (иконка + tooltip
+- [x] Если таб уже привязан — пункт «Отвязать от tmux (`window`)».
+- [x] Привязанный таб визуально помечен в табстрипе (иконка + tooltip
       `session:window`).
-- [ ] `Ctrl+Enter` идёт по цепочке Explicit → Last → Fallback (picker).
-- [ ] Привязка резолвится по имени `session:window` → активная pane окна.
-- [ ] Окно привязки не найдено → toast + picker (graceful, без отправки «не туда»).
-- [ ] Привязка переживает перезапуск приложения (IndexedDB).
-- [ ] `Ctrl+Shift+Enter` по-прежнему всегда открывает picker.
-- [ ] Старые tmux-настройки (target mode / pane id) удалены из Settings, стора,
+- [x] `Ctrl+Enter` идёт по цепочке Explicit → Last → Fallback (picker).
+- [x] Привязка резолвится по имени `session:window` → активная pane окна.
+- [x] Окно привязки не найдено → toast + picker (graceful, без отправки «не туда»).
+- [x] Привязка переживает перезапуск приложения (IndexedDB).
+- [x] `Ctrl+Shift+Enter` по-прежнему всегда открывает picker.
+- [x] Старые tmux-настройки (target mode / pane id) удалены из Settings, стора,
       db, persistence. `tmuxAutoSubmit` работает.
-- [ ] Браузер (не Tauri): `Ctrl+Enter` → clipboard-fallback, без попыток shell.
+- [x] Браузер (не Tauri): `Ctrl+Enter` → clipboard-fallback, без попыток shell.
+- [x] **Клавиатура:** `Ctrl+B` — привязать/перепривязать активный таб (bind-picker);
+      `Ctrl+Shift+B` — отвязать. Обе команды в палитре и `ShortcutsModal`.
+- [x] **StatusBar** всегда показывает привязку активного таба слева:
+      `⊷ session:window` (accent) либо `⊷ привязать` (faint); кликабельно → bind-picker.
 
 ## Scope
 
