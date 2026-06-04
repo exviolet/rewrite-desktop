@@ -1,6 +1,6 @@
 # Task 09 — pin/unpin табов
 
-**Status:** active
+**Status:** done (Codex реализовал, Claude Opus отревьюил + смержил в web master `2b9a540`)
 **Priority:** #10 (см. [docs/ROADMAP.md](../docs/ROADMAP.md))
 **Owner:** human-planner (Claude Opus) + executor (**Codex**)
 
@@ -28,21 +28,21 @@ bulk-close, переживают рестарт.
 
 ## Acceptance criteria
 
-- [ ] `Tab.pinned?: boolean`; экшен `togglePin(id)`.
-- [ ] `Ctrl+P` переключает pin активного таба. Повторный `Ctrl+P` на закреплённом
+- [x] `Tab.pinned?: boolean`; экшен `togglePin(id)`.
+- [x] `Ctrl+P` переключает pin активного таба. Повторный `Ctrl+P` на закреплённом
       активном табе — открепляет (toggle).
-- [ ] Command palette переехал на `Ctrl+Shift+P` (Ctrl+P его больше не открывает).
-- [ ] Контекстное меню таба (ПКМ): «Закрепить таб» / «Открепить таб» вверху.
-- [ ] Закреплённый таб визуально помечен (pin-иконка в табе).
-- [ ] Pinned-табы рендерятся левее обычных; инвариант держится при pin/unpin,
+- [x] Command palette переехал на `Ctrl+Shift+P` (Ctrl+P его больше не открывает).
+- [x] Контекстное меню таба (ПКМ): «Закрепить таб» / «Открепить таб» вверху.
+- [x] Закреплённый таб визуально помечен (pin-иконка в табе).
+- [x] Pinned-табы рендерятся левее обычных; инвариант держится при pin/unpin,
       reorder, рестарте.
-- [ ] При pin таб уходит в конец pinned-блока; при unpin — в начало обычного.
-- [ ] Bulk-close («закрыть остальные/сохранённые/справа», cleanup пустых) НЕ
+- [x] При pin таб уходит в конец pinned-блока; при unpin — в начало обычного.
+- [x] Bulk-close («закрыть остальные/сохранённые/справа», cleanup пустых) НЕ
       трогает pinned.
-- [ ] Прямое закрытие pinned (`Ctrl+W`, средняя кнопка, ×) — закрывает как обычно.
-- [ ] Pinned состояние переживает перезапуск (IndexedDB).
-- [ ] `ShortcutsModal`: `Ctrl+P` = закрепить таб, `Ctrl+Shift+P` = command palette.
-- [ ] `cd web && bun tsc --noEmit && bun lint` — clean.
+- [x] Прямое закрытие pinned (`Ctrl+W`, средняя кнопка, ×) — закрывает как обычно.
+- [x] Pinned состояние переживает перезапуск (IndexedDB).
+- [x] `ShortcutsModal`: `Ctrl+P` = закрепить таб, `Ctrl+Shift+P` = command palette.
+- [x] `cd web && bun tsc --noEmit && bun lint` — clean.
 
 ## Scope (точная реализация)
 

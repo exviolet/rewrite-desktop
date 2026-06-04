@@ -48,7 +48,7 @@
 | 7 | Workspaces | — | conditional — **только если #2/#3/#6 не решат хаос 75 Untitled** |
 | 8 | tmux target picker (`Ctrl+Shift+Enter` → выбор session/window/pane с именами) | [tasks/07-tmux-picker.md](../tasks/07-tmux-picker.md) | done |
 | 9 | tmux tab-binding (таб → окно по `session:window` имени, цепочка Explicit→Last→Modal) | [tasks/08-tmux-tab-binding.md](../tasks/08-tmux-tab-binding.md) | done |
-| 10 | Pin/unpin табов (`Ctrl+P` = pin/toggle, command palette → `Ctrl+Shift+P`) | [tasks/09-pin-unpin-tabs.md](../tasks/09-pin-unpin-tabs.md) | active (executor: Codex) |
+| 10 | Pin/unpin табов (`Ctrl+P` = pin/toggle, command palette → `Ctrl+Shift+P`) | [tasks/09-pin-unpin-tabs.md](../tasks/09-pin-unpin-tabs.md) | done |
 | 11 | Reference panel → live tab (указать на живой таб вместо снапшота; замена split-view) | — | queued |
 
 Файлы задач создаются в `tasks/` по мере того как фича становится active. YAGNI: не создавать stub-файлы для будущих приоритетов заранее.
