@@ -49,9 +49,17 @@
 | 8 | tmux target picker (`Ctrl+Shift+Enter` → выбор session/window/pane с именами) | [tasks/07-tmux-picker.md](../tasks/07-tmux-picker.md) | done |
 | 9 | tmux tab-binding (таб → окно по `session:window` имени, цепочка Explicit→Last→Modal) | [tasks/08-tmux-tab-binding.md](../tasks/08-tmux-tab-binding.md) | done |
 | 10 | Pin/unpin табов (`Ctrl+P` = pin/toggle, command palette → `Ctrl+Shift+P`) | [tasks/09-pin-unpin-tabs.md](../tasks/09-pin-unpin-tabs.md) | done |
-| 11 | Reference panel → live tab (указать на живой таб вместо снапшота; замена split-view) | [tasks/10-reference-live-tab.md](../tasks/10-reference-live-tab.md) | active (executor: Codex) |
+| 11 | Reference panel → live tab (указать на живой таб вместо снапшота; замена split-view) | [tasks/10-reference-live-tab.md](../tasks/10-reference-live-tab.md) | **paused / under review** (реализация есть, дизайн под вопросом) |
 
 Файлы задач создаются в `tasks/` по мере того как фича становится active. YAGNI: не создавать stub-файлы для будущих приоритетов заранее.
+
+### #11 reference live-tab — paused / under review (2026-06-11)
+
+Codex реализовал tasks/10 полностью (tsc + lint exit 0), но при ревью дизайн
+вызвал сомнения. **Не мержим, не выпиливаем** — код сохранён на ветке web
+`feature/reference-live-tab` (коммит `70d9f6c`, не в `master`). Возврат к решению
+о судьбе фичи — отложен (отдельный разговор про будущее Rewrite). README
+сознательно **не** документируют live-tab, пока он не смержен.
 
 ### Решения grill-сессии 2026-06-03 (tmux deep integration + tab UX)
 

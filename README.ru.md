@@ -26,7 +26,8 @@
 - Кастомный title bar с window controls.
 - Восстановление закрытых табов (`Ctrl+Shift+T`).
 - Глобальные toast-уведомления.
-- Отправка в `tmux` (`Ctrl+Enter`) через `tauri-plugin-shell` — основная причина
+- `tmux`-интеграция через `tauri-plugin-shell` — отправка (`Ctrl+Enter`), target
+  picker (`Ctrl+Shift+Enter`) и привязка таба к окну. Основная причина
   существования desktop-сборки.
 
 Всё остальное — полный набор возможностей браузерной версии.

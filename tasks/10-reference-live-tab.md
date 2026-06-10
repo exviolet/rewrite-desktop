@@ -1,8 +1,13 @@
 # Task 10 — Reference panel → live tab
 
-**Status:** active
+**Status:** paused / under review
 **Priority:** #11 (см. [docs/ROADMAP.md](../docs/ROADMAP.md))
 **Owner:** human-planner (Claude Opus) + executor (**Codex**)
+
+> **2026-06-11:** Реализация выполнена Codex (tsc + lint exit 0), но **дизайн
+> под вопросом** после ревью. Не мержить. Код сохранён на ветке web
+> `feature/reference-live-tab` (коммит `70d9f6c`), не в `master`. Решение по
+> судьбе фичи — отложено.
 
 > Спек детальный намеренно: исполнитель — Codex. Где упрёшься в неясность —
 > оставь TODO-комментарий, НЕ угадывай. Desktop/Tauri файлы НЕ трогать.

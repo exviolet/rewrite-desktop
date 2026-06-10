@@ -26,7 +26,8 @@ covers building and installing the native binary.
 - Custom title bar with window controls.
 - Reopen closed tabs (`Ctrl+Shift+T`).
 - Global toast notifications.
-- `tmux` send (`Ctrl+Enter`) via `tauri-plugin-shell` — the desktop build's
+- `tmux` integration via `tauri-plugin-shell` — send (`Ctrl+Enter`), target
+  picker (`Ctrl+Shift+Enter`), and per-tab window binding. The desktop build's
   reason to exist.
 
 Everything else is the full browser feature set.
