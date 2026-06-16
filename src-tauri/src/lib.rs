@@ -8,7 +8,12 @@ pub fn run() {
 
   #[cfg(feature = "mcp-bridge")]
   {
-    builder = builder.plugin(tauri_plugin_mcp_bridge::init());
+    // bind loopback only — dev-мост по умолчанию слушает 0.0.0.0, на LAN торчать не должен
+    builder = builder.plugin(
+      tauri_plugin_mcp_bridge::Builder::new()
+        .bind_address("127.0.0.1")
+        .build(),
+    );
   }
 
   builder

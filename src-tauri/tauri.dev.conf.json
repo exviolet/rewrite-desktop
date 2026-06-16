@@ -1,6 +1,17 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "app": {
-    "withGlobalTauri": true
+    "withGlobalTauri": true,
+    "security": {
+      "capabilities": [
+        "default",
+        {
+          "identifier": "mcp-bridge-dev",
+          "description": "dev-only: webview-доступ для MCP-моста",
+          "windows": ["main"],
+          "permissions": ["mcp-bridge:default"]
+        }
+      ]
+    }
   }
 }
