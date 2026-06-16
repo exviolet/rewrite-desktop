@@ -26,3 +26,9 @@ tauri-plugin-log = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
 tauri-plugin-shell = "2"
+tauri-plugin-mcp-bridge = { version = "0.11", optional = true }
+
+[features]
+# dev-only MCP-мост (tauri-plugin-mcp-bridge): включается через `--features mcp-bridge`
+# в dev-скрипте, в release-сборке отсутствует физически.
+mcp-bridge = ["dep:tauri-plugin-mcp-bridge"]

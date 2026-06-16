@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun tauri dev",
+    "dev": "bun tauri dev --features mcp-bridge --config src-tauri/tauri.dev.conf.json",
     "build": "bun tauri build",
     "update-web": "git submodule update --remote web"
   },
