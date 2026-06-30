@@ -1,5 +1,14 @@
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+  // WebKitGTK (Linux): DMABUF-рендерер даёт tearing/артефакты при скролле на части
+  // GPU-драйверов (Nvidia, отдельные Mesa/Wayland). Отключаем глючный путь шаринга
+  // буферов — аппаратный композитинг при этом остаётся. Ставим до создания webview.
+  // Уважаем явный override: если переменная уже задана в окружении — не трогаем.
+  #[cfg(target_os = "linux")]
+  if std::env::var_os("WEBKIT_DISABLE_DMABUF_RENDERER").is_none() {
+    std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
+  }
+
   #[cfg_attr(not(feature = "mcp-bridge"), allow(unused_mut))]
   let mut builder = tauri::Builder::default()
     .plugin(tauri_plugin_dialog::init())
