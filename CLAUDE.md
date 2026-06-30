@@ -39,7 +39,7 @@
 ## Verification
 | Изменения в | Команды |
 |---|---|
-| `web/src/**/*.ts(x)` | `cd web && bun tsc --noEmit && bun lint` |
+| `web/src/**/*.ts(x)` | `cd web && bun tsc -b && bun lint` (НЕ `--noEmit`: корневой tsconfig — solution-stub с `files:[]`, `--noEmit` проверяет 0 файлов и всегда зелёный; реальный гейт — `-b`) |
 | `src-tauri/src/**/*.rs` | `cd src-tauri && cargo check` |
 | `src-tauri/capabilities/*.json`, `tauri.conf.json` | `bun run build` (валидация Tauri-манифеста) |
 | указатель submodule обновлён | `git submodule status` должен быть чистый |
