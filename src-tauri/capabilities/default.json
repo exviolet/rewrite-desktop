@@ -23,6 +23,31 @@
           "name": "tmux",
           "cmd": "tmux",
           "args": true
+        },
+        {
+          "name": "orca-terminal-send-text",
+          "cmd": "orca-ide",
+          "args": ["terminal", "send", "--terminal", { "validator": "^term_[0-9a-fA-F-]+$" }, "--text", { "validator": "^[\\s\\S]*$" }, "--json"]
+        },
+        {
+          "name": "orca-terminal-send-enter",
+          "cmd": "orca-ide",
+          "args": ["terminal", "send", "--terminal", { "validator": "^term_[0-9a-fA-F-]+$" }, "--enter", "--json"]
+        },
+        {
+          "name": "orca-worktree-ps",
+          "cmd": "orca-ide",
+          "args": ["worktree", "ps", "--json"]
+        },
+        {
+          "name": "orca-terminal-list",
+          "cmd": "orca-ide",
+          "args": ["terminal", "list", "--json"]
+        },
+        {
+          "name": "orca-terminal-wait",
+          "cmd": "orca-ide",
+          "args": ["terminal", "wait", "--terminal", { "validator": "^term_[0-9a-fA-F-]+$" }, "--for", "tui-idle", "--timeout-ms", { "validator": "^[0-9]+$" }, "--json"]
         }
       ]
     },
