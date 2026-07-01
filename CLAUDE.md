@@ -63,7 +63,11 @@
 ## Safety Rails
 
 ### NEVER
-- Не добавлять Tauri permissions в `src-tauri/capabilities/default.json` без явного подтверждения. Модель: local-first, без доступа к сети и процессам. Исключение: `tmux` разрешён через `tauri-plugin-shell` для отправки текста в выбранную pane и чтения топологии read-only (`list-panes`/`list-windows`/`list-sessions` — для target picker'а); остальной shell, сеть и произвольные процессы не разрешены.
+- Не добавлять Tauri permissions в `src-tauri/capabilities/default.json` без явного подтверждения. Модель: local-first, без доступа к сети и произвольным процессам. Исключения через `tauri-plugin-shell`:
+  - `tmux` — отправка текста в выбранную pane + чтение топологии read-only (`list-panes`/`list-windows`/`list-sessions` для target picker'а). Заскоуплен `args:true`.
+  - `orca-ide` (Orca ADE CLI) — **Policy B, scoped по подкомандам (НЕ `args:true`)**: только `terminal send` (отправка промпта), `terminal list` / `worktree ps` (read-only топология + `lastAssistantMessage`), `terminal wait --for tui-idle` (settle/refresh). Явно НЕ разрешены: `computer` (управление десктопом), `terminal create --command` (спавн процессов), `worktree create/rm`, browser/automations — поверхность `orca-ide` качественно опаснее tmux, `args:true` молча выдал бы desktop-control + произвольные процессы. Подтверждено 2026-07-01.
+  - Остальной shell, сеть и произвольные процессы не разрешены.
+  - NB: `fs`-read/write в home-scope **уже выдан** в манифесте (`fs:scope-home-recursive` + `allow-write-text-file`) — оговорка «без доступа к процессам» относится к shell/сети, не к fs.
 - Не делать `git push --force` на `master`.
 - Не запускать `./uninstall.sh` без подтверждения (стирает установленный бинарник).
 - Не коммитить `HANDOFF.md`.
