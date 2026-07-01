@@ -1,6 +1,6 @@
 # Task 10 — Reference panel → live tab
 
-**Status:** paused / under review
+**Status:** ОТКЛОНЁН (tab-режим, 2026-07-01) — панель репрофилируется под orca-agent (Phase 2)
 **Priority:** #11 (см. [docs/ROADMAP.md](../docs/ROADMAP.md))
 **Owner:** human-planner (Claude Opus) + executor (**Codex**)
 
@@ -8,6 +8,13 @@
 > под вопросом** после ревью. Не мержить. Код сохранён на ветке web
 > `feature/reference-live-tab` (коммит `70d9f6c`), не в `master`. Решение по
 > судьбе фичи — отложено.
+>
+> **2026-07-01 — РЕШЕНО: tab-режим отклонён.** Сомнение = pencil A/B-swap
+> («непривычно») + слабый жилец. Reference panel вместо этого получит `orca-agent`-
+> режим (зеркало `lastAssistantMessage` Orca-агента) — Phase 2 интеграции Orca
+> (parked / next). Ветка `70d9f6c` остаётся **донором** переиспользуемых кусков
+> (source-picker, read-only body, insert); tab-специфику (swap, D&D-таба,
+> `linkedTabId`) выпилить. Этот спек ниже — исторический, НЕ имплементировать как есть.
 
 > Спек детальный намеренно: исполнитель — Codex. Где упрёшься в неясность —
 > оставь TODO-комментарий, НЕ угадывай. Desktop/Tauri файлы НЕ трогать.
