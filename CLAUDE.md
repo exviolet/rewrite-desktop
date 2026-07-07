@@ -25,6 +25,7 @@
 - `src-tauri/capabilities/default.json` — permission manifest.
 - `src-tauri/tauri.conf.json` — Tauri-конфиг.
 - `install.sh` / `uninstall.sh` — установка/удаление бинарника в `~/.local/` (Linux only).
+- `update.sh` — обновление установленного Rewrite для консюмера (pull → sync submodule → `build:bin` → install).
 - `docs/ROADMAP.md` — позиционирование, приоритеты, отказы. Источник правды по продуктовым решениям.
 - `tasks/` — детальные task-спеки для приоритетных фич (создаются по мере того, как фича становится active).
 - `HANDOFF.md` — per-session state (в `.gitignore`).
@@ -33,9 +34,11 @@
 ## Build & Test
 - Install deps: `bun install`
 - Dev: `bun dev` (Vite + Tauri window)
-- Build production: `bun run build`
-- Update web submodule: `bun update-web`
+- Build production (полный бандл, AppImage/deb): `bun run build` — на части машин падает на linuxdeploy (AppImage); для install в `~/.local/bin` не нужен.
+- Build бинаря без бандла: `bun run build:bin` (`tauri build --no-bundle`) — только `target/release/rewrite-desktop`, linuxdeploy не запускается. Основной путь для install.
+- Update web submodule (dev, бамп указателя): `bun update-web`
 - Install / remove binary: `./install.sh` / `./uninstall.sh`
+- Обновить установленный Rewrite (консюмер): `./update.sh`
 
 ## Verification
 | Изменения в | Команды |
