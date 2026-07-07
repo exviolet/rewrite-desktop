@@ -8,14 +8,15 @@
 - При любой новой фиче — сверять с позиционированием и приоритетом в [docs/ROADMAP.md](docs/ROADMAP.md). Pipeline/transformation-направление = red flag scope creep.
 
 ## Project Goals (приоритет)
+> Пересмотрено 2026-07-07: курс на staged public OSS. Детали — docs/ROADMAP.md «Сессия 2026-07-07».
 - **Primary:** личный инструмент + опыт работы с Tauri/Rust.
+- **Primary:** **staged public OSS** — вести как настоящий открытый проект (стадии A презентабельность → B release-артефакты → C discoverability), честный scope, без обещаний enterprise-поддержки.
 - **Secondary:** портфолио.
-- **Не цель:** OSS-продукт с поддержкой. Модель распространения — public repo, лицензия, README с дисклеймером «works for me, no support guaranteed».
 
-Следствия для решений: предлагать быстрые breaking changes без миграций; не предлагать auto-update / CI-релизы / Windows билды / i18n / CONTRIBUTING.md; при выборе «полировать для юзеров» vs «экспериментировать с Tauri» — выбирать второе.
+Следствия для решений: breaking changes без миграций всё ещё ок (ранняя стадия), но разрушающие data-изменения координировать со 2-м пользователем; для OSS-стадий **теперь оправданы** README+демо, лицензия, prebuilt release-артефакты, фикс дистрибуции (`--no-bundle` + `update.sh`), опц. CI (YAGNI-режим → нейтральный); без явного жильца по-прежнему НЕ делать Windows/macOS билды, i18n, CONTRIBUTING.md; «полировать для юзеров» vs «Tauri-эксперимент» — теперь баланс (есть внешние пользователи), не автоматически второе.
 
 ## Context
-- **Solo dev, ранняя стадия (v0.1.0).** Один разработчик и один пользователь. Миграции данных, feature flags, backwards-compat shims **не нужны** — clean sweeps допустимы.
+- **Solo dev, ранняя стадия (v0.1.0), 2 пользователя** (автор + друг — начал пользоваться сам, 2026-07). Курс на staged OSS. Миграции данных, feature flags, backwards-compat shims **не нужны** — clean sweeps допустимы, но разрушающие data-изменения (IndexedDB) координировать с другом (у него накоплены данные).
 - GUI прошёл dogfooding: ежедневное использование, 75+ табов накопилось. Это значит UX-боль реальна, но не блокирует.
 
 ## Repo Layout
@@ -63,7 +64,7 @@
 ## Safety Rails
 
 ### NEVER
-- Не добавлять Tauri permissions в `src-tauri/capabilities/default.json` без явного подтверждения. Модель: local-first, без доступа к сети и произвольным процессам. Исключения через `tauri-plugin-shell`:
+- Не добавлять Tauri permissions в `src-tauri/capabilities/default.json` без явного подтверждения. Модель: **редактор держит границу no-network-egress** — webview не делает произвольных сетевых вызовов и не спавнит произвольные процессы. (Реформулировано 2026-07-07: это НЕ «local-first как продуктовая догма» — сетевое/AI живёт в отдельном companion-продукте за opt-in границей, не в редакторе. Причина границы: `fs:scope-home-recursive` + сетевой egress = поверхность утечки; `web/` тянется submodule'ом, не аудируется построчно.) Исключения через `tauri-plugin-shell`:
   - `tmux` — отправка текста в выбранную pane + чтение топологии read-only (`list-panes`/`list-windows`/`list-sessions` для target picker'а). Заскоуплен `args:true`.
   - `orca-ide` (Orca ADE CLI) — **Policy B, scoped по подкомандам (НЕ `args:true`)**: только `terminal send` (отправка промпта), `terminal list` / `worktree ps` (read-only топология + `lastAssistantMessage`), `terminal wait --for tui-idle` (settle/refresh). Явно НЕ разрешены: `computer` (управление десктопом), `terminal create --command` (спавн процессов), `worktree create/rm`, browser/automations — поверхность `orca-ide` качественно опаснее tmux, `args:true` молча выдал бы desktop-control + произвольные процессы. Подтверждено 2026-07-01.
   - Остальной shell, сеть и произвольные процессы не разрешены.
