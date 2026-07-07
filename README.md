@@ -59,17 +59,30 @@ bun dev      # Vite dev server + Tauri window
 ## Build & install
 
 ```bash
-bun run build     # production build
-./install.sh      # install to ~/.local/ (binary + .desktop + icon)
-./uninstall.sh    # remove
+bun run build:bin   # build just the binary (tauri build --no-bundle)
+./install.sh        # install to ~/.local/ (binary + .desktop + icon)
+./uninstall.sh      # remove
 ```
+
+`build:bin` skips AppImage/deb bundling (it relies on `linuxdeploy` and isn't
+needed for a `~/.local/bin` install). The full `bun run build` may fail on
+`linuxdeploy` on some machines — you don't need it for installing.
 
 After `install.sh` the app shows up in rofi / your app launcher.
 
-## Updating the web submodule
+## Update an installed copy
 
 ```bash
-bun update-web                                  # pull latest web/ commit
+./update.sh   # git pull + sync web submodule + build:bin + install
+```
+
+Pulls `master`, checks out the pinned `web/` submodule commit, rebuilds the
+binary, and reinstalls in one step. Restart the app from your launcher after.
+
+## Updating the web submodule (dev)
+
+```bash
+bun update-web                                  # bump web/ to its latest commit
 git add web && git commit -m "chore: bump web submodule"
 ```
 

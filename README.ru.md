@@ -59,14 +59,27 @@ bun dev      # Vite dev server + окно Tauri
 ## Сборка и установка
 
 ```bash
-bun run build     # продакшен-сборка
-./install.sh      # установить в ~/.local/ (бинарник + .desktop + иконка)
-./uninstall.sh    # удалить
+bun run build:bin   # собрать только бинарник (tauri build --no-bundle)
+./install.sh        # установить в ~/.local/ (бинарник + .desktop + иконка)
+./uninstall.sh      # удалить
 ```
+
+`build:bin` пропускает бандлинг AppImage/deb (он опирается на `linuxdeploy` и не
+нужен для установки в `~/.local/bin`). Полный `bun run build` на части машин
+падает на `linuxdeploy` — для установки он не требуется.
 
 После `install.sh` приложение появляется в rofi / app launcher.
 
-## Обновление web-сабмодуля
+## Обновление установленной копии
+
+```bash
+./update.sh   # git pull + синхронизация web-сабмодуля + build:bin + install
+```
+
+Одной командой: тянет `master`, выставляет закоммиченный указатель `web/`,
+пересобирает бинарник и переустанавливает. После — перезапусти приложение из лаунчера.
+
+## Обновление web-сабмодуля (dev)
 
 ```bash
 bun update-web                                       # подтянуть последний коммит web/
