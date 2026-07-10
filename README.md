@@ -45,7 +45,7 @@ Everything else is the full browser feature set.
 ## Setup
 
 ```bash
-git clone --recurse-submodules git@github.com:exviolet/rewrite-desktop.git
+git clone --recurse-submodules https://github.com/exviolet/rewrite-desktop.git
 cd rewrite-desktop
 bun install
 ```
