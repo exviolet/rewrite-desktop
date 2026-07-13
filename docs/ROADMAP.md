@@ -47,7 +47,7 @@
 | 4 | Floating reference panel | [tasks/04-floating-reference-panel.md](../tasks/04-floating-reference-panel.md) | done |
 | 5 | Bulk Find & Replace с preview | [tasks/05-bulk-find-replace-preview.md](../tasks/05-bulk-find-replace-preview.md) | done |
 | 6 | Global Tab Search (`Ctrl+Shift+D`) | [tasks/06-global-tab-search.md](../tasks/06-global-tab-search.md) | done |
-| 7 | Workspaces (изоляция табов по проекту; НЕ knowledge base) | [tasks/12-workspaces.md](../tasks/12-workspaces.md) | **active** — спек 2026-07-10. v1: изоляция TabBar + свитчер `Ctrl+Shift+W`, пины по-workspace. Браузерные группы и сайдбар отклонены в v1 → Issues [#4](https://github.com/exviolet/rewrite-desktop/issues/4)/[#7](https://github.com/exviolet/rewrite-desktop/issues/7) |
+| 7 | Workspaces (изоляция табов по проекту; НЕ knowledge base) | [tasks/12-workspaces.md](../tasks/12-workspaces.md) | **done** (2026-07-10) — v1: изоляция TabBar + свитчер `Ctrl+Shift+W`, пины по-workspace, bulk-close скоуплен, DB v4→v5 аддитивно. Браузерные группы и сайдбар отклонены в v1 → Issues [#4](https://github.com/exviolet/rewrite-desktop/issues/4)/[#7](https://github.com/exviolet/rewrite-desktop/issues/7) |
 | 8 | tmux target picker (`Ctrl+Shift+Enter` → выбор session/window/pane с именами) | [tasks/07-tmux-picker.md](../tasks/07-tmux-picker.md) | done |
 | 9 | tmux tab-binding (таб → окно по `session:window` имени, цепочка Explicit→Last→Modal) | [tasks/08-tmux-tab-binding.md](../tasks/08-tmux-tab-binding.md) | done |
 | 10 | Pin/unpin табов (`Ctrl+P` = pin/toggle, command palette → `Ctrl+Shift+P`) | [tasks/09-pin-unpin-tabs.md](../tasks/09-pin-unpin-tabs.md) | done |

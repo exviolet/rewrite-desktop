@@ -1,11 +1,17 @@
 # Task 12 — Workspaces (изоляция табов + свитчер)
 
-**Status:** active (спек написан Claude Opus, исполнитель — **Codex**)
+**Status:** **done** (спек и имплементация — Claude Opus; web `a924e90`, merge `feature/workspaces`)
 **Priority:** #7 (см. [docs/ROADMAP.md](../docs/ROADMAP.md))
-**Owner:** human-planner (Claude Opus) + executor (**Codex**)
+**Owner:** Claude Opus (planner + executor)
 
-> Спек детальный намеренно: исполнитель — Codex. Где упрёшься в неясность —
-> оставь TODO-комментарий, не угадывай.
+> Спек намеренно детальный (писался под возможную передачу Codex'у). Где упираешься
+> в неясность — спроси, не угадывай.
+
+> **Известный размен:** `WorkspaceSwitcher` станет **шестой** копией паттерна
+> «модалка-пикер» ([#9](https://github.com/exviolet/rewrite-desktop/issues/9) — извлечение
+> примитива сознательно отложено до после Workspaces). Поэтому писать его **строго по
+> существующему паттерну** (`TmuxTargetPicker` / `OrcaTargetPicker`), не изобретая свой —
+> чтобы будущее извлечение осталось механическим.
 
 ## Цель
 
