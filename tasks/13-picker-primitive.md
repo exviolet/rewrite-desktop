@@ -1,6 +1,6 @@
 # Task 13 — Извлечение примитива модалки-пикера
 
-**Status:** **active** (планировщик + исполнитель — Claude Opus)
+**Status:** **active** — фазы A + B1 done (web `06c832b`, `abf8365`); B2/B3 впереди
 **Issue:** [#9](https://github.com/exviolet/rewrite-desktop/issues/9)
 **Owner:** Claude Opus (planner + executor)
 
@@ -96,10 +96,12 @@ interface UsePickerModalOptions {
 
 ## Фазы (порядок из issue #9)
 
-- **A — чистые хелперы.** `lib/fuzzyMatch.ts` + `lib/highlight.tsx`; перевести
-  `CommandPalette` / `GlobalSearchPanel` / `TabSwitcher`. Отдельный коммит, риск ≈ 0.
-- **B1 — примитив + простые.** `usePickerModal` + `<PickerModal>`; мигрировать
-  `WorkspaceSwitcher` (create-row) и `OrcaTargetPicker` (async). Проверяем каркас на этих двух.
+- **A — чистые хелперы.** ✅ **DONE** (web `06c832b`). `lib/fuzzyMatch.ts` + `lib/highlight.tsx`;
+  `CommandPalette` / `GlobalSearchPanel` / `TabSwitcher` переведены. `tsc`+`lint` = 0.
+- **B1 — примитив + простые.** ✅ **DONE** (web `abf8365`). `usePickerModal` + `<PickerModal>`
+  (+`PickerHeader`/`PickerHint`); `WorkspaceSwitcher` (create-row) и `OrcaTargetPicker` (async)
+  мигрированы. Живьём (bun dev + chrome-devtools): create-row+преселект+arrow-nav+switch+изоляция,
+  Orca error-state, Esc/focus, Phase-A highlight — ок, консоль чистая.
 - **B2 — grouped.** `TmuxTargetPicker` + `GlobalSearchPanel` (плоский курсор сквозь секции через
   `data-picker-index`; Tmux — причуда «не сбрасывать selection на ввод», сохранить его rows-эффект).
 - **B3 — TabSwitcher.** Только хром+навигация. Preview-aside / scoring / `Tab`/`Ctrl+Del` /
