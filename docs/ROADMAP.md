@@ -52,7 +52,7 @@
 | 9 | tmux tab-binding (таб → окно по `session:window` имени, цепочка Explicit→Last→Modal) | [tasks/08-tmux-tab-binding.md](../tasks/08-tmux-tab-binding.md) | done |
 | 10 | Pin/unpin табов (`Ctrl+P` = pin/toggle, command palette → `Ctrl+Shift+P`) | [tasks/09-pin-unpin-tabs.md](../tasks/09-pin-unpin-tabs.md) | done |
 | 11 | Reference panel → live tab (указать на живой таб вместо снапшота; замена split-view) | [tasks/10-reference-live-tab.md](../tasks/10-reference-live-tab.md) | **tab-режим отклонён (2026-07-01)** → панель репрофилируется под orca-agent-зеркало (Phase 2, см. секцию «Orca ADE») |
-| 12 | Tab grouping (именованные цветные группы внутри workspace) | [tasks/14-tab-grouping.md](../tasks/14-tab-grouping.md) | **active** (2026-07-27) — [#4](https://github.com/exviolet/rewrite-desktop/issues/4) распаркован: условие reviv'а выполнено (боль осталась ВНУТРИ одного workspace после 2+ недель с изоляцией), плюс настойчивый запрос 2-го юзера |
+| 12 | Tab grouping (именованные цветные группы внутри workspace) | [tasks/14-tab-grouping.md](../tasks/14-tab-grouping.md) | **done** (2026-07-27) — [#4](https://github.com/exviolet/rewrite-desktop/issues/4) распаркован: условие reviv'а выполнено (боль осталась ВНУТРИ одного workspace после 2+ недель с изоляцией), плюс настойчивый запрос 2-го юзера |
 
 Файлы задач создаются в `tasks/` по мере того как фича становится active. YAGNI: не создавать stub-файлы для будущих приоритетов заранее.
 
