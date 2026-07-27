@@ -1,6 +1,6 @@
 # Task 13 — Извлечение примитива модалки-пикера
 
-**Status:** **active** — фазы A + B1 done (web `06c832b`, `abf8365`); B2/B3 впереди
+**Status:** **done** — все фазы + CommandPalette (web merge `8257c7e`, ветка удалена)
 **Issue:** [#9](https://github.com/exviolet/rewrite-desktop/issues/9)
 **Owner:** Claude Opus (planner + executor)
 
@@ -68,7 +68,9 @@ interface UsePickerModalOptions {
   count: number;                                   // длина плоского списка (вкл. create-row)
   onEnter: (index: number) => void;                // Enter по selectedIndex
   onClose: () => void;
-  onKeyDown?: (e: KeyboardEvent) => boolean | void; // вызывается ПЕРВЫМ; true = handled, гасит дефолт-навигацию
+  // вызывается ПЕРВЫМ; true = handled, гасит дефолт-навигацию. ctx = { index, setIndex } —
+  // выделение аргументом, а не замыканием (иначе цикл: клавиши объявляются до вызова хука)
+  onKeyDown?: (e: KeyboardEvent, ctx: PickerKeyContext) => boolean | void;
   disabled?: boolean;                              // ранний return (TabSwitcher: pendingClose)
   initialIndex?: number;                           // ленивый старт (Workspace: active); useState-семантика (только первый рендер)
 }
@@ -102,12 +104,29 @@ interface UsePickerModalOptions {
   (+`PickerHeader`/`PickerHint`); `WorkspaceSwitcher` (create-row) и `OrcaTargetPicker` (async)
   мигрированы. Живьём (bun dev + chrome-devtools): create-row+преселект+arrow-nav+switch+изоляция,
   Orca error-state, Esc/focus, Phase-A highlight — ок, консоль чистая.
-- **B2 — grouped.** `TmuxTargetPicker` + `GlobalSearchPanel` (плоский курсор сквозь секции через
-  `data-picker-index`; Tmux — причуда «не сбрасывать selection на ввод», сохранить его rows-эффект).
-- **B3 — TabSwitcher.** Только хром+навигация. Preview-aside / scoring / `Tab`/`Ctrl+Del` /
-  `pendingClose` — bespoke (через `onKeyDown`/`disabled`/свой рендер). Не влезает — не форсим.
+- **B2 — grouped.** ✅ **DONE** (web `402b7d5`). `TmuxTargetPicker` + `GlobalSearchPanel`: плоский
+  курсор сквозь секции через `data-picker-index`. Причуды сохранены — Tmux не сбрасывает выделение
+  на ввод (им правит только rows-эффект с преселектом last-target), GlobalSearch сбрасывает
+  эффектом по `query`/`case`/`regex`.
+- **B3 — TabSwitcher.** ✅ **DONE** (web `742b4a4`). Только хром+навигация; preview-aside, scoring,
+  `Tab`, `Ctrl+Del`, `pendingClose` остались bespoke. Потребовало правки примитива: `onKeyDown`
+  получил 2-й аргумент `{ index, setIndex }` — иначе зависимость закольцовывалась (клавиши
+  консьюмера объявляются до вызова хука, а выделением владеет хук).
+- **CommandPalette.** ✅ **DONE** (web `07f5064`). В фазах поимённо не значился, но в «Ловушках»
+  ниже прописан его перевод со `list.children[i]` — иначе одна из шести копий осталась бы старой.
+  Дефолтный футер примитива подошёл без переопределения.
 
-Каждая фаза — атомарный коммит на ветке `feature/picker-primitive` (в `web/`).
+Каждая фаза — атомарный коммит на ветке `feature/picker-primitive` (в `web/`), merge `--no-ff`.
+
+## Найдено по ходу: 7-я копия паттерна (НЕ мигрирована)
+
+`TriggerPhrasePicker` (`Ctrl+K`, 190 строк) — тот же паттерн в режиме `list`, но модалка
+двухрежимная: в `edit`/`new` она форма, где `Enter`/стрелки должны оставаться нативными
+(ввод в textarea), а `Esc` двухуровневый (edit → назад в list, list → закрыть). Механической
+миграции не выйдет: нужен `onKeyDown` с перехватом `Esc` при `mode !== "list"`.
+
+Спек его не обследовал и в шести не считал — **решение по нему за автором**. Стоимость: ~30 строк
+в консьюмере, риск низкий (тот же класс, что TabSwitcher).
 
 ## Ловушки (из чтения кода 2026-07-15)
 
@@ -125,6 +144,23 @@ interface UsePickerModalOptions {
   «не тому агенту» живут в `tmuxResolve.ts`/`useOrcaSend`. Рефактор пикера их не касается.
 
 ## Verification
+
+**Итог 2026-07-27:** `tsc -b` + `lint` = 0 на всех этапах. Живой прогон — в **Tauri-сборке**
+(`bun dev` + MCP-мост), т.е. с настоящей tmux-топологией (5 сессий, 17 pane) и реальной БД,
+а не в браузере. Консоль чистая.
+
+Проверено вживую: GlobalSearch — 18 совпадений в 3 секциях, курсор сквозь границы, клампы,
+доскролл, `Enter` открывает таб + подсвечивает совпадение оверлеем; Tmux — курсор сквозь 4
+границы сессий, `Enter` привязал/отправил **ровно в строку под курсором** (`%18` на плоском
+индексе 8 — маппинг курсор→`rows` верен), преселект last-target и «ввод не сбрасывает выделение»
+(после фильтра выделение уехало за `%18` на его новый индекс, а не в 0); TabSwitcher — preview-aside
+следует за выделением, `Tab` (2/2 + смена плейсхолдера), `Ctrl+Del` → `pendingClose` → **стрелки
+мертвы** (`disabled`) → подтверждение закрыло таб и индекс пересчитался, `Ctrl+Backspace` таб НЕ
+закрыл; CommandPalette — 40 команд, ширина 448px как была, доскролл на индексе 20, `Enter`
+выполняет; Workspace/Orca (B1) — открытие, фокус, async error-state целы.
+
+Не проверено: нативное «удалить слово» по `Ctrl+Backspace` — WebDriver не доставляет нажатия с
+модификаторами в этот webview. Важное (пикер его не перехватывает, таб цел) подтверждено.
 
 Тестов в проекте нет (YAGNI). Гейт каждой фазы: `cd web && bun tsc -b && bun lint` = 0, затем
 **живой прогон** мигрированных пикеров:
