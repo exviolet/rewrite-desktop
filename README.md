@@ -29,8 +29,18 @@ covers building and installing the native binary.
 - `tmux` integration via `tauri-plugin-shell` — send (`Ctrl+Enter`), target
   picker (`Ctrl+Shift+Enter`), and per-tab window binding. The desktop build's
   reason to exist.
+- [Orca ADE](https://github.com/stablyai/orca) integration — bind a tab to an
+  Orca agent and `Ctrl+Enter` sends the prompt into that agent's terminal
+  instead of a tmux pane.
 
 Everything else is the full browser feature set.
+
+## Permissions
+
+The webview gets a deliberately narrow shell surface: `tmux`, and `orca-ide`
+scoped to four read/send subcommands. No arbitrary process spawning, no network
+egress from the editor — home-directory file access is only safe because of
+that. See `src-tauri/capabilities/default.json`.
 
 ## Requirements
 
@@ -91,6 +101,10 @@ git add web && git commit -m "chore: bump web submodule"
 A personal tool on `v0.1.x`, used daily on Linux. Public as a portfolio piece —
 **it works for me, but no support or stability is guaranteed.**
 
+Honest scope: Linux-only, built from source (no prebuilt release yet), no
+auto-update, no tests, and issues may sit. Contributions aren't being
+solicited — fork freely instead.
+
 ## License
 
-MIT
+[MIT](LICENSE)
