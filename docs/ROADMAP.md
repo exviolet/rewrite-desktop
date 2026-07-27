@@ -284,9 +284,14 @@ Rewrite Orca» закрыт — **да, комплементарно**.
 прямая подпитка secondary-goal (портфолио) + желаемый OSS-опыт.
 
 **Стадии (не флипать в «полный продукт» разом):**
-- **A — презентабельность:** README с GIF/asciinema send-flow, лицензия, честный scope; фикс сборки
-  (`tauri build --no-bundle`, см. ниже) + `update.sh`, чтобы install работал у чужого человека.
-- **B — артефакты релиза:** prebuilt бинарь/AppImage в GitHub Release (сначала починить linuxdeploy).
+- **A — презентабельность:** ✅ **DONE (2026-07-27).** Демо-GIF send-flow (web `9a9802c`), фикс
+  сборки (`--no-bundle` + `update.sh`, `a56b705`), README Класс 1 (`b325a2a`), **Класс 2 + LICENSE**
+  (web `1c9d4b0`, desktop `ce25ca6`): `LICENSE`-файл в обоих репо (оба обещали MIT, а файла не было —
+  публичный репо без лицензии читается как «все права защищены»), orca-интеграция и workspaces в
+  README, секция «Разрешения», OFL-атрибуция JetBrains Mono, честный scope. Заодно вычищено враньё
+  «`Ctrl+P` = палитра» (реально `Ctrl+Shift+P`) — тот же дефект, что чинили в `web/CLAUDE.md`.
+- **B — артефакты релиза (следующая):** prebuilt бинарь/AppImage в GitHub Release. Блокер —
+  `linuxdeploy` падает на части машин; чинить его надо ДО того, как обещать готовый артефакт.
 - **C — discoverability:** r/commandline, r/tmux, Show HN, agentic-coding комьюнити, X — под демо.
 
 **Следствие для YAGNI:** режим сдвигается aggressive → **нейтральный** (глоб. правило: >1 юзер).
