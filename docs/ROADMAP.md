@@ -53,7 +53,7 @@
 | 10 | Pin/unpin табов (`Ctrl+P` = pin/toggle, command palette → `Ctrl+Shift+P`) | [tasks/09-pin-unpin-tabs.md](../tasks/09-pin-unpin-tabs.md) | done |
 | 11 | Reference panel → live tab (указать на живой таб вместо снапшота; замена split-view) | [tasks/10-reference-live-tab.md](../tasks/10-reference-live-tab.md) | **tab-режим отклонён (2026-07-01)** → панель репрофилируется под orca-agent-зеркало (Phase 2, см. секцию «Orca ADE») |
 | 12 | Tab grouping (именованные цветные группы внутри workspace) | [tasks/14-tab-grouping.md](../tasks/14-tab-grouping.md) | **done** (2026-07-27) — [#4](https://github.com/exviolet/rewrite-desktop/issues/4) распаркован: условие reviv'а выполнено (боль осталась ВНУТРИ одного workspace после 2+ недель с изоляцией), плюс настойчивый запрос 2-го юзера |
-| 13 | Herdr как терминальный таргет + извлечение `TerminalTarget` (единый пикер) | [tasks/15-herdr-target.md](../tasks/15-herdr-target.md) | **active** (2026-08-01) — оба пользователя перешли на herdr; третья реализация → абстракция, которую ждала секция «Терминальные таргеты» |
+| 13 | Herdr как терминальный таргет + извлечение `TerminalTarget` (единый пикер) | [tasks/15-herdr-target.md](../tasks/15-herdr-target.md) | **фаза B done** (2026-08-01, web `c2a134c`) — herdr-send работает, подтверждён живым прогоном. Фазы A (абстракция) и C (единый пикер) впереди: сейчас в коде **три** параллельных пути |
 
 Файлы задач создаются в `tasks/` по мере того как фича становится active. YAGNI: не создавать stub-файлы для будущих приоритетов заранее.
 
@@ -522,6 +522,23 @@ Herdr — не гипотеза: сессия велась внутри него
    `tab/workspace create/close`, `session stop`, `server stop`, `config`, `update`,
    `integration install`. Разрешены 5 форм: `agent list`, `workspace list`, `tab list`,
    `agent prompt`, `pane send-text`.
+
+### Порядок фаз изменён: B вперёд A (решение автора)
+
+Спек задумывал A (абстракция) → B (herdr) → C (единый пикер). Автор выбрал **начать с B**:
+herdr нужен в бою сразу, а фаза A даёт нулевой видимый выигрыш при ненулевом риске на
+daily-driver-пути отправки. **Цена принята осознанно:** herdr встал третьей копией
+orca-паттерна. Фаза B отгружена и подтверждена живым прогоном (web merge `c2a134c`).
+
+Что это значит для будущих A/C: реализованный herdr-путь **проще** двух других — у herdr
+нет флага `--json` (вывод и так JSON, лишний флаг роняет команду), не нужна ручная
+bracketed-paste обёртка и settle-таймер (`agent prompt` первоклассный, сабмитит сам —
+подтверждено живьём), а `submit=false` идёт отдельной командой `pane send-text`.
+Механически подгонять herdr под orca-шаблон при извлечении абстракции **нельзя**: обёртка
+`\x1b[200~` уедет в промпт литералом.
+
+Взаимоисключимость привязок при этом уже централизована (`applyBinding` в `editorStore`) —
+с тремя таргетами шесть точек `delete` были бы миной.
 
 ### Признанная ошибка прошлой сессии
 

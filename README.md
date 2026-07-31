@@ -32,14 +32,19 @@ covers building and installing the native binary.
 - [Orca ADE](https://github.com/stablyai/orca) integration — bind a tab to an
   Orca agent and `Ctrl+Enter` sends the prompt into that agent's terminal
   instead of a tmux pane.
+- [Herdr](https://herdr.dev) integration — same idea, bound to a Herdr agent
+  pane. Herdr persists pane ids, so unlike tmux and Orca the binding survives a
+  server restart or a reboot.
 
 Everything else is the full browser feature set.
 
 ## Permissions
 
-The webview gets a deliberately narrow shell surface: `tmux`, and `orca-ide`
-scoped to four read/send subcommands. No arbitrary process spawning, no network
-egress from the editor — home-directory file access is only safe because of
+The webview gets a deliberately narrow shell surface: `tmux`, plus `orca-ide`
+and `herdr` scoped to individual read/send subcommands. Scoping matters most for
+`herdr`: the same binary can also run arbitrary processes and tear down sessions,
+so it is allowlisted per subcommand rather than wholesale. No arbitrary process
+spawning, no network egress from the editor — home-directory file access is only safe because of
 that. See `src-tauri/capabilities/default.json`.
 
 ## Requirements
