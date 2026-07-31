@@ -48,6 +48,31 @@
           "name": "orca-terminal-wait",
           "cmd": "orca-ide",
           "args": ["terminal", "wait", "--terminal", { "validator": "^term_[0-9a-fA-F-]+$" }, "--for", "tui-idle", "--timeout-ms", { "validator": "^[0-9]+$" }, "--json"]
+        },
+        {
+          "name": "herdr-agent-list",
+          "cmd": "herdr",
+          "args": ["agent", "list"]
+        },
+        {
+          "name": "herdr-workspace-list",
+          "cmd": "herdr",
+          "args": ["workspace", "list"]
+        },
+        {
+          "name": "herdr-tab-list",
+          "cmd": "herdr",
+          "args": ["tab", "list"]
+        },
+        {
+          "name": "herdr-agent-prompt",
+          "cmd": "herdr",
+          "args": ["agent", "prompt", { "validator": "^w[A-Za-z0-9]+:p[A-Za-z0-9]+$" }, { "validator": "^[\\s\\S]*$" }]
+        },
+        {
+          "name": "herdr-pane-send-text",
+          "cmd": "herdr",
+          "args": ["pane", "send-text", { "validator": "^w[A-Za-z0-9]+:p[A-Za-z0-9]+$" }, { "validator": "^[\\s\\S]*$" }]
         }
       ]
     },
