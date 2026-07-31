@@ -35,6 +35,10 @@ covers building and installing the native binary.
 - [Herdr](https://herdr.dev) integration — same idea, bound to a Herdr agent
   pane. Herdr persists pane ids, so unlike tmux and Orca the binding survives a
   server restart or a reboot.
+- One target picker for all three (`Ctrl+Shift+Enter`), sectioned by source; a
+  source that is not running simply has no section.
+- Live agent status in the status bar — a quiet dot while the agent works, a
+  visible label only when it is blocked waiting for your answer.
 
 Everything else is the full browser feature set.
 
