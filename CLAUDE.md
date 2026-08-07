@@ -34,6 +34,7 @@
 ## Build & Test
 - Install deps: `bun install`
 - Dev: `bun dev` (Vite + Tauri window)
+- Тесты: `cd web && bun test` (встроенный раннер bun; покрыты чистая логика и слой IndexedDB, компоненты — нет)
 - Build production (полный бандл, AppImage/deb): `bun run build` — на части машин падает на linuxdeploy (AppImage); для install в `~/.local/bin` не нужен.
 - Build бинаря без бандла: `bun run build:bin` (`tauri build --no-bundle`) — только `target/release/rewrite-desktop`, linuxdeploy не запускается. Основной путь для install.
 - Update web submodule (dev, бамп указателя): `bun update-web`
@@ -43,7 +44,8 @@
 ## Verification
 | Изменения в | Команды |
 |---|---|
-| `web/src/**/*.ts(x)` | `cd web && bun tsc -b && bun lint` (НЕ `--noEmit`: корневой tsconfig — solution-stub с `files:[]`, `--noEmit` проверяет 0 файлов и всегда зелёный; реальный гейт — `-b`) |
+| `web/src/**/*.ts(x)` | `cd web && bun tsc -b && bun lint && bun test` (НЕ `--noEmit`: корневой tsconfig — solution-stub с `files:[]`, `--noEmit` проверяет 0 файлов и всегда зелёный; реальный гейт — `-b`) |
+| `web/src/lib/**` (чистая логика, `db.ts`) | `bun test` обязателен: там резолв таргетов (промпт не тому агенту) и чтение чужой базы |
 | `src-tauri/src/**/*.rs` | `cd src-tauri && cargo check` |
 | `src-tauri/capabilities/*.json`, `tauri.conf.json` | `bun run build` (валидация Tauri-манифеста) |
 | указатель submodule обновлён | `git submodule status` должен быть чистый |
