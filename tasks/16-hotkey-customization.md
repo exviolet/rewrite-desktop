@@ -1,6 +1,7 @@
 # Task 16 — Кастомизация хоткеев
 
-**Status:** active (спек, 2026-08-08)
+**Status:** active — **фаза A закрыта** (2026-08-08, web merge `feature/hotkey-registry`),
+фазы B и C впереди
 **Priority:** высокий — пять накопленных жильцов, боль подтверждена реальными переездами клавиш
 **Owner:** human-planner (Claude Opus) + executor (Codex или Claude)
 
@@ -148,7 +149,7 @@ export interface ShortcutCommand {
 
 ## Фазы
 
-**A — реестр и матчинг, без UI.** `lib/shortcuts.ts`, перенос всех веток
+**A — реестр и матчинг, без UI. ✅ СДЕЛАНО.** `lib/shortcuts.ts`, перенос всех веток
 `useKeyboardShortcuts` и командной части `useEditorKeymap` в данные, точное сравнение
 модификаторов, листенер `TabBar` внутрь. Поведение не меняется ни на клавишу.
 *Ценность сама по себе:* исчезает класс «жадных веток».
