@@ -38,6 +38,16 @@
 - Build production (полный бандл, AppImage/deb/rpm): `bun run build` — собирает все три. Скрипт выставляет `NO_STRIP=1`: **не убирать**, иначе AppImage снова падает (см. ниже). Для install в `~/.local/bin` не нужен.
   > **Почему `NO_STRIP=1`.** `linuxdeploy` таскает внутри себя `strip` из старых binutils, а системные библиотеки Arch собраны с `-z pack-relative-relocs` и содержат секцию `.relr.dyn` (`SHT_RELR`, тип `0x13`), которую тот `strip` не понимает → `failed to run linuxdeploy` без причины в выводе. Цена флага измерена и близка к нулю: AppDir 287 → 283 МБ (1.4%), потому что библиотеки Arch и так поставляются стрипнутыми. Диагноз 2026-08-09.
 - Build бинаря без бандла: `bun run build:bin` (`tauri build --no-bundle`) — только `target/release/rewrite-desktop`, linuxdeploy не запускается. Основной путь для install.
+- **Release-артефакты — только через контейнер** (`Dockerfile`, Ubuntu 22.04), не хостовой сборкой:
+  ```bash
+  docker build -t rewrite-appimage-builder .
+  docker run --rm -v "$PWD":/src -u "$(id -u):$(id -g)" -e HOME=/tmp \
+    -e CARGO_TARGET_DIR=/src/src-tauri/target-docker \
+    rewrite-appimage-builder bash -lc 'bun install && bun run build'
+  ```
+  > **Почему не хостом.** AppImage бандлит библиотеки, но **не glibc**: внутрь кладутся системные библиотеки сборочной машины, и они требуют её glibc. Собранный на Arch артефакт требовал **glibc 2.43** и не запускался нигде, кроме rolling-дистрибутивов — то есть ровно у тех, кто и так собирает из исходников. Ubuntu 22.04 даёт **2.35**: Ubuntu 22.04+, Debian 12+, Fedora 36+, Arch. Отдельный `CARGO_TARGET_DIR` обязателен — иначе Arch- и Ubuntu-объектники перетирают друг друга и обе сборки идут с нуля. Измерено 2026-08-09.
+  >
+  > Публикуется **только AppImage**. `.deb`/`.rpm` собираются той же командой, но их никто не ставил на Debian/Fedora — непроверенный артефакт в публичном релизе хуже его отсутствия.
 - Update web submodule (dev, бамп указателя): `bun update-web`
 - Install / remove binary: `./install.sh` / `./uninstall.sh`
 - Обновить установленный Rewrite (консюмер): `./update.sh`

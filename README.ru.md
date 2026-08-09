@@ -51,7 +51,28 @@
 целиком. Ни произвольных процессов, ни сетевых вызовов из редактора — доступ к файлам в home безопасен именно поэтому.
 См. `src-tauri/capabilities/default.json`.
 
-## Требования
+## Скачать
+
+Бери AppImage из [последнего релиза](https://github.com/exviolet/rewrite-desktop/releases/latest):
+
+```bash
+chmod +x Rewrite_*_amd64.AppImage
+./Rewrite_*_amd64.AppImage
+```
+
+Нужен **glibc ≥ 2.35** — Ubuntu 22.04+, Debian 12+, Fedora 36+, Arch. Собирается
+в контейнере на Ubuntu 22.04 именно поэтому: AppImage бандлит библиотеки, но
+**не** glibc, так что сборка на rolling-дистрибутиве дала бы файл, работающий
+только на rolling-дистрибутивах.
+
+Ждёт от системы обычный десктопный набор — те библиотеки, которые AppImage
+намеренно не бандлит (X11/Wayland, OpenGL, fontconfig, freetype). На любом
+десктопе они есть, в голом контейнере — нет.
+
+Auto-update нет: чтобы обновиться, скачай новый AppImage либо собирай из
+исходников и пользуйся `./update.sh`.
+
+## Требования (для сборки из исходников)
 
 - [Bun](https://bun.sh/) ≥ 1.0
 - [Rust](https://rustup.rs/) (stable)
@@ -83,11 +104,27 @@ bun run build:bin   # собрать только бинарник (tauri build 
 ./uninstall.sh      # удалить
 ```
 
-`build:bin` пропускает бандлинг AppImage/deb (он опирается на `linuxdeploy` и не
-нужен для установки в `~/.local/bin`). Полный `bun run build` на части машин
-падает на `linuxdeploy` — для установки он не требуется.
+`build:bin` пропускает бандлинг AppImage/deb/rpm — для установки в
+`~/.local/bin` они не нужны. Полный `bun run build` собирает все три.
 
 После `install.sh` приложение появляется в rofi / app launcher.
+
+### Release-артефакты
+
+Релизные AppImage собираются в контейнере, чтобы остаться пригодными на старых
+дистрибутивах (почему — см. [Скачать](#скачать)):
+
+```bash
+docker build -t rewrite-appimage-builder .
+docker run --rm -v "$PWD":/src -u "$(id -u):$(id -g)" -e HOME=/tmp \
+  -e CARGO_TARGET_DIR=/src/src-tauri/target-docker \
+  rewrite-appimage-builder bash -lc 'bun install && bun run build'
+```
+
+Артефакт кладётся в `src-tauri/target-docker/release/bundle/appimage/`.
+Публикуется только AppImage: `.deb` и `.rpm` выходят из той же сборки, но их
+никто не ставил на Debian или Fedora, а выкладывать непроверенные пакеты —
+обещание, которое проект не может обеспечить.
 
 ## Обновление установленной копии
 
@@ -110,9 +147,9 @@ git add web && git commit -m "chore: обновлён web submodule"
 Личный инструмент на `v0.1.x`, ежедневное использование на Linux. Публичный как
 портфолио — **работает для меня, но поддержка и стабильность не гарантируются.**
 
-Честный scope: только Linux, сборка из исходников (готовых релизов пока нет), без
-auto-update, без тестов, issues могут висеть. Контрибуции не запрашиваются —
-форкай свободно.
+Честный scope: только Linux, только x86_64, без auto-update, issues могут висеть.
+Тесты покрывают лишь чистую логику и слой IndexedDB. Контрибуции не
+запрашиваются — форкай свободно.
 
 ## Лицензия
 
