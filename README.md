@@ -51,7 +51,28 @@ so it is allowlisted per subcommand rather than wholesale. No arbitrary process
 spawning, no network egress from the editor — home-directory file access is only safe because of
 that. See `src-tauri/capabilities/default.json`.
 
-## Requirements
+## Download
+
+Grab the AppImage from the [latest release](https://github.com/exviolet/rewrite-desktop/releases/latest):
+
+```bash
+chmod +x Rewrite_*_amd64.AppImage
+./Rewrite_*_amd64.AppImage
+```
+
+Needs **glibc ≥ 2.35** — Ubuntu 22.04+, Debian 12+, Fedora 36+, Arch. It is built
+in a container on Ubuntu 22.04 for exactly that reason; an AppImage bundles its
+libraries but *not* glibc, so building on a rolling distro would produce a file
+that only runs on rolling distros.
+
+It expects a normal desktop system for the handful of libraries AppImage
+deliberately does not bundle (X11/Wayland, OpenGL, fontconfig, freetype). Any
+Linux desktop has them; a bare container does not.
+
+No auto-update — to upgrade, download the new AppImage, or build from source and
+use `./update.sh`.
+
+## Requirements (building from source)
 
 - [Bun](https://bun.sh/) ≥ 1.0
 - [Rust](https://rustup.rs/) (stable)
@@ -83,11 +104,27 @@ bun run build:bin   # build just the binary (tauri build --no-bundle)
 ./uninstall.sh      # remove
 ```
 
-`build:bin` skips AppImage/deb bundling (it relies on `linuxdeploy` and isn't
-needed for a `~/.local/bin` install). The full `bun run build` may fail on
-`linuxdeploy` on some machines — you don't need it for installing.
+`build:bin` skips AppImage/deb/rpm bundling — you don't need them for a
+`~/.local/bin` install. The full `bun run build` produces all three.
 
 After `install.sh` the app shows up in rofi / your app launcher.
+
+### Release artifacts
+
+Release AppImages are built inside a container so they stay usable on older
+distributions (see [Download](#download) for why):
+
+```bash
+docker build -t rewrite-appimage-builder .
+docker run --rm -v "$PWD":/src -u "$(id -u):$(id -g)" -e HOME=/tmp \
+  -e CARGO_TARGET_DIR=/src/src-tauri/target-docker \
+  rewrite-appimage-builder bash -lc 'bun install && bun run build'
+```
+
+The artifact lands in `src-tauri/target-docker/release/bundle/appimage/`. Only
+the AppImage is published: the `.deb` and `.rpm` come out of the same build but
+have never been installed on a Debian or Fedora system, and shipping untested
+packages is a promise this project cannot back.
 
 ## Update an installed copy
 
@@ -110,8 +147,8 @@ git add web && git commit -m "chore: bump web submodule"
 A personal tool on `v0.1.x`, used daily on Linux. Public as a portfolio piece —
 **it works for me, but no support or stability is guaranteed.**
 
-Honest scope: Linux-only, built from source (no prebuilt release yet), no
-auto-update, no tests, and issues may sit. Contributions aren't being
+Honest scope: Linux-only, x86_64 only, no auto-update, and issues may sit. Tests
+cover pure logic and the IndexedDB layer only. Contributions aren't being
 solicited — fork freely instead.
 
 ## License

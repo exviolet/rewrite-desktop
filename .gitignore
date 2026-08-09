@@ -25,3 +25,6 @@ HANDOFF.md
 
 # Claude Code — личные настройки (settings.json и hooks/ коммитятся)
 .claude/settings.local.json
+
+# сборка release-артефактов в контейнере (см. Dockerfile)
+src-tauri/target-docker
