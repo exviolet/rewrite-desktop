@@ -35,7 +35,8 @@
 - Install deps: `bun install`
 - Dev: `bun dev` (Vite + Tauri window)
 - Тесты: `cd web && bun test` (встроенный раннер bun; покрыты чистая логика и слой IndexedDB, компоненты — нет)
-- Build production (полный бандл, AppImage/deb): `bun run build` — на части машин падает на linuxdeploy (AppImage); для install в `~/.local/bin` не нужен.
+- Build production (полный бандл, AppImage/deb/rpm): `bun run build` — собирает все три. Скрипт выставляет `NO_STRIP=1`: **не убирать**, иначе AppImage снова падает (см. ниже). Для install в `~/.local/bin` не нужен.
+  > **Почему `NO_STRIP=1`.** `linuxdeploy` таскает внутри себя `strip` из старых binutils, а системные библиотеки Arch собраны с `-z pack-relative-relocs` и содержат секцию `.relr.dyn` (`SHT_RELR`, тип `0x13`), которую тот `strip` не понимает → `failed to run linuxdeploy` без причины в выводе. Цена флага измерена и близка к нулю: AppDir 287 → 283 МБ (1.4%), потому что библиотеки Arch и так поставляются стрипнутыми. Диагноз 2026-08-09.
 - Build бинаря без бандла: `bun run build:bin` (`tauri build --no-bundle`) — только `target/release/rewrite-desktop`, linuxdeploy не запускается. Основной путь для install.
 - Update web submodule (dev, бамп указателя): `bun update-web`
 - Install / remove binary: `./install.sh` / `./uninstall.sh`
