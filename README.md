@@ -39,6 +39,10 @@ covers building and installing the native binary.
   source that is not running simply has no section.
 - Live agent status in the status bar — a quiet dot while the agent works, a
   visible label only when it is blocked waiting for your answer.
+- Exactly one instance runs: launching again focuses the open window instead of
+  opening a second one. Two copies on one database would quietly eat each other's
+  work — a save rewrites the whole snapshot, so the instance with the staler view
+  wins and deletes whatever the other one created.
 
 Everything else is the full browser feature set.
 
