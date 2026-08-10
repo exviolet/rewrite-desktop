@@ -69,6 +69,16 @@ It expects a normal desktop system for the handful of libraries AppImage
 deliberately does not bundle (X11/Wayland, OpenGL, fontconfig, freetype). Any
 Linux desktop has them; a bare container does not.
 
+> ⚠️ **Don't mix the AppImage and a source build on the same machine.** Both use
+> the same data directory, but the AppImage bundles WebKitGTK 2.50 while a current
+> distribution ships 2.52+. From 2.52 on, WebKit writes IndexedDB in a new metadata
+> format and **silently upgrades the database the first time it opens it** — after
+> which the AppImage can no longer read it, and shows an empty editor plus a storage
+> error. Your data is intact and is never overwritten: when Rewrite cannot read, it
+> stops writing altogether. Go back to whichever build you were using before and
+> your tabs are there. The incompatibility is one-way — newer WebKit reads older
+> databases, not the other way round.
+
 No auto-update — to upgrade, download the new AppImage, or build from source and
 use `./update.sh`.
 
