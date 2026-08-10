@@ -1,3 +1,5 @@
+use tauri::Manager;
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   // WebKitGTK (Linux): DMABUF-рендерер даёт tearing/артефакты при скролле на части
@@ -28,6 +30,33 @@ pub fn run() {
 
   #[cfg_attr(not(feature = "mcp-bridge"), allow(unused_mut))]
   let mut builder = tauri::Builder::default()
+    // Регистрируется ПЕРВЫМ — требование плагина (плагины стартуют в порядке добавления).
+    //
+    // Зачем вообще: два инстанса на одной IndexedDB тихо съедают работу друг друга.
+    // saveSession не дописывает, а делает clear() + переписывает сторы целиком снапшотом
+    // из памяти СВОЕГО инстанса (web/src/lib/db.ts). Поэтому второй инстанс, у которого
+    // в памяти состояние на момент его запуска, при первой же записи стирает всё, что
+    // первый успел создать после. Хуже того, ему для этого не нужно ничего делать:
+    // beforeunload зовёт flushSession(), то есть достаточно ЗАКРЫТЬ лишнее окно.
+    //
+    // Гард обязан быть нативным: BroadcastChannel и Web Locks не выходят за пределы
+    // своего webview-процесса, два инстанса друг друга оттуда не видят.
+    //
+    // На Linux плагин держит DBus-имя по identifier, а он один и тот же у сборки из
+    // исходников и у AppImage — то есть эта пара тоже ловится (случай 2026-08-10).
+    .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
+      // Лейбл окна в tauri.conf.json не задан → Tauri даёт дефолтный "main". Фолбэк на
+      // любое окно оставлен намеренно: разъехавшийся лейбл иначе дал бы молчаливый no-op,
+      // и второй запуск выглядел бы как «приложение не реагирует».
+      let window = app
+        .get_webview_window("main")
+        .or_else(|| app.webview_windows().into_values().next());
+      if let Some(window) = window {
+        let _ = window.unminimize();
+        let _ = window.show();
+        let _ = window.set_focus();
+      }
+    }))
     .plugin(tauri_plugin_dialog::init())
     .plugin(tauri_plugin_fs::init())
     .plugin(tauri_plugin_shell::init());
