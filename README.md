@@ -34,7 +34,10 @@ covers building and installing the native binary.
   instead of a tmux pane.
 - [Herdr](https://herdr.dev) integration — same idea, bound to a Herdr agent
   pane. Herdr persists pane ids, so unlike tmux and Orca the binding survives a
-  server restart or a reboot.
+  server restart or a reboot. **Needs Herdr ≥ 0.7**: pane ids changed shape after
+  0.6 (`w657cefe818690a-1` → `wK:p1`), and the older form is rejected by the
+  command allowlist — sending fails with a message that blames the permission
+  rather than the version.
 - One target picker for all three (`Ctrl+Shift+Enter`), sectioned by source; a
   source that is not running simply has no section.
 - Live agent status in the status bar — a quiet dot while the agent works, a
