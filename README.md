@@ -1,10 +1,10 @@
 <div align="center">
 
-<img src="icon.svg" alt="Rewrite Desktop" width="112" height="112" />
+<img src="icon.svg" alt="Sendoff Desktop" width="112" height="112" />
 
-# Rewrite Desktop
+# Sendoff Desktop
 
-**Native desktop wrapper for [Rewrite](https://github.com/exviolet/rewrite) — built on Tauri v2.**
+**Native desktop wrapper for [Sendoff](https://github.com/exviolet/sendoff-web) — built on Tauri v2.**
 
 <img src="https://img.shields.io/badge/license-MIT-8b5cf6?style=for-the-badge" alt="License MIT" />
 <img src="https://img.shields.io/badge/platform-Linux-c4b5fd?style=for-the-badge" alt="Platform: Linux" />
@@ -14,10 +14,10 @@ English · [Русский](README.ru.md)
 
 </div>
 
-This repo is the thin native shell around the [Rewrite](https://github.com/exviolet/rewrite)
-web app (included here as a git submodule). For what Rewrite *is* — the
+This repo is the thin native shell around the [Sendoff](https://github.com/exviolet/sendoff-web)
+web app (included here as a git submodule). For what Sendoff *is* — the
 prompt-first workflow, features, and screenshots — read the
-[**web README**](https://github.com/exviolet/rewrite#readme). This file only
+[**web README**](https://github.com/exviolet/sendoff-web#readme). This file only
 covers building and installing the native binary.
 
 ## What the wrapper adds
@@ -64,11 +64,11 @@ that. See `src-tauri/capabilities/default.json`.
 
 ## Download
 
-Grab the AppImage from the [latest release](https://github.com/exviolet/rewrite-desktop/releases/latest):
+Grab the AppImage from the [latest release](https://github.com/exviolet/sendoff/releases/latest):
 
 ```bash
-chmod +x Rewrite_*_amd64.AppImage
-./Rewrite_*_amd64.AppImage
+chmod +x Sendoff_*_amd64.AppImage
+./Sendoff_*_amd64.AppImage
 ```
 
 Needs **glibc ≥ 2.35** — Ubuntu 22.04+, Debian 12+, Fedora 36+, Arch. It is built
@@ -85,7 +85,7 @@ Linux desktop has them; a bare container does not.
 > distribution ships 2.52+. From 2.52 on, WebKit writes IndexedDB in a new metadata
 > format and **silently upgrades the database the first time it opens it** — after
 > which the AppImage can no longer read it, and shows an empty editor plus a storage
-> error. Your data is intact and is never overwritten: when Rewrite cannot read, it
+> error. Your data is intact and is never overwritten: when Sendoff cannot read, it
 > stops writing altogether. Go back to whichever build you were using before and
 > your tabs are there. The incompatibility is one-way — newer WebKit reads older
 > databases, not the other way round.
@@ -106,8 +106,8 @@ use `./update.sh`.
 ## Setup
 
 ```bash
-git clone --recurse-submodules https://github.com/exviolet/rewrite-desktop.git
-cd rewrite-desktop
+git clone --recurse-submodules https://github.com/exviolet/sendoff.git
+cd sendoff-desktop
 bun install
 ```
 
@@ -136,10 +136,10 @@ Release AppImages are built inside a container so they stay usable on older
 distributions (see [Download](#download) for why):
 
 ```bash
-docker build -t rewrite-appimage-builder .
+docker build -t sendoff-appimage-builder .
 docker run --rm -v "$PWD":/src -u "$(id -u):$(id -g)" -e HOME=/tmp \
   -e CARGO_TARGET_DIR=/src/src-tauri/target-docker \
-  rewrite-appimage-builder bash -lc 'bun install && bun run build'
+  sendoff-appimage-builder bash -lc 'bun install && bun run build'
 ```
 
 The artifact lands in `src-tauri/target-docker/release/bundle/appimage/`. Only

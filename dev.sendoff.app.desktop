@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Sendoff
+Comment=Prompt-first editor for terminal coding agents
+Exec=sendoff-desktop
+Icon=sendoff
+Type=Application
+Categories=Utility;TextEditor;
+StartupWMClass=sendoff-desktop
+Terminal=false

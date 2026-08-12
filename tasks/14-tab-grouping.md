@@ -1,7 +1,7 @@
 # Task 14 — Tab grouping (группы табов внутри workspace)
 
 **Status:** **done** — все три фазы (web merge `1554653`), 2026-07-27
-**Issue:** [#4](https://github.com/exviolet/rewrite-desktop/issues/4)
+**Issue:** [#4](https://github.com/exviolet/sendoff/issues/4)
 **Owner:** Claude Opus (спек) → исполнитель по договорённости
 
 ## Почему сейчас

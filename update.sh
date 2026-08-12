@@ -1,15 +1,10 @@
-#!/bin/bash
-# update.sh — обновить установленный Rewrite до последнего master.
-# Для консюмера: тянет desktop, выравнивает web-submodule на ЗАКОММИЧЕННЫЙ
-# указатель (не бампит на свой master — это делает разработчик через
-# `bun update-web`), собирает бинарь и переустанавливает в ~/.local/bin.
-#
-# Сборка через `build:bin` (= `tauri build --no-bundle`): только бинарь, без
-# AppImage/deb — bundling пропускается, linuxdeploy не запускается (для install
-# в ~/.local/bin бандл не нужен, а linuxdeploy на части машин падает).
 set -e
 
 cd "$(dirname "$0")"
+
+# Перенос каталога данных (com.rewrite.app → dev.sendoff.app) делает install.sh —
+# он зовётся ниже и лежит на обоих путях установки. Здесь его дублировать нельзя:
+# перенос ДО сборки оставил бы упавшее обновление со старым бинарником и уехавшими данными.
 
 echo "→ git pull (desktop, ff-only)…"
 git pull --ff-only
@@ -26,4 +21,4 @@ bun run build:bin
 echo "→ установка…"
 ./install.sh
 
-echo "✓ Rewrite обновлён до $(git rev-parse --short HEAD). Перезапусти приложение из меню."
+echo "✓ Sendoff обновлён до $(git rev-parse --short HEAD). Перезапусти приложение из меню."

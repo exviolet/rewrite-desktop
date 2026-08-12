@@ -14,7 +14,7 @@
 2. прыгать к нужному табу по fuzzy-поиску;
 3. безопасно убирать пустой мусор.
 
-Это остаётся в рамках позиционирования Rewrite как prompt-first editor. Это не workspace system, не knowledge base и не файловый проект-менеджер.
+Это остаётся в рамках позиционирования Sendoff как prompt-first editor. Это не workspace system, не knowledge base и не файловый проект-менеджер.
 
 ## Acceptance criteria
 
@@ -75,7 +75,7 @@ web/src/components/TabSwitcher/TabSwitcher.tsx
 - `Ctrl+T` — открыть tab switcher.
 - Внутри: `ArrowUp/ArrowDown`, `Enter`, `Escape`.
 
-Почему `Ctrl+T`: в desktop-приложении это ожидаемый shortcut для tab navigation/search, а браузерный new-tab shortcut внутри Tauri не нужен. `Ctrl+N` уже создаёт новый Rewrite tab.
+Почему `Ctrl+T`: в desktop-приложении это ожидаемый shortcut для tab navigation/search, а браузерный new-tab shortcut внутри Tauri не нужен. `Ctrl+N` уже создаёт новый Sendoff tab.
 
 Поведение:
 
@@ -168,7 +168,7 @@ cd web && bun tsc --noEmit && bun lint
 
 - **Legacy tabs.** Уже есть 125-130 табов без `titleSource`. Решение: normalize в `hydrate()` по title pattern, без IndexedDB migration.
 - **Dirty semantics.** Сейчас `updateContent()` всегда ставит `isDirty: true`. Значит tab, где пользователь ввёл и стёр текст, cleanup не удалит. Это консервативно и правильно.
-- **Shortcut conflict.** `Ctrl+T` в браузере создаёт новый browser tab, но Rewrite target — Tauri desktop; в browser fallback можно всё равно перехватывать внутри app.
+- **Shortcut conflict.** `Ctrl+T` в браузере создаёт новый browser tab, но Sendoff target — Tauri desktop; в browser fallback можно всё равно перехватывать внутри app.
 - **Performance.** 130 табов мало для сложных индексов. Делать простой in-memory filter в компоненте. Не вводить Fuse.js dependency, пока не доказана необходимость.
 
 ## Явные отказы для этой задачи

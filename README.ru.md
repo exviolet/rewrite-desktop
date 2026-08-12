@@ -1,10 +1,10 @@
 <div align="center">
 
-<img src="icon.svg" alt="Rewrite Desktop" width="112" height="112" />
+<img src="icon.svg" alt="Sendoff Desktop" width="112" height="112" />
 
-# Rewrite Desktop
+# Sendoff Desktop
 
-**Нативная desktop-обёртка для [Rewrite](https://github.com/exviolet/rewrite) на Tauri v2.**
+**Нативная desktop-обёртка для [Sendoff](https://github.com/exviolet/sendoff-web) на Tauri v2.**
 
 <img src="https://img.shields.io/badge/license-MIT-8b5cf6?style=for-the-badge" alt="License MIT" />
 <img src="https://img.shields.io/badge/platform-Linux-c4b5fd?style=for-the-badge" alt="Platform: Linux" />
@@ -15,9 +15,9 @@
 </div>
 
 Этот репозиторий — тонкая нативная оболочка вокруг веб-приложения
-[Rewrite](https://github.com/exviolet/rewrite) (подключено сюда как git-сабмодуль).
-Что такое Rewrite — prompt-first workflow, возможности, скриншоты — смотри в
-[**web README**](https://github.com/exviolet/rewrite/blob/master/README.ru.md).
+[Sendoff](https://github.com/exviolet/sendoff-web) (подключено сюда как git-сабмодуль).
+Что такое Sendoff — prompt-first workflow, возможности, скриншоты — смотри в
+[**web README**](https://github.com/exviolet/sendoff-web/blob/master/README.ru.md).
 Этот файл описывает только сборку и установку нативного бинарника.
 
 ## Что добавляет обёртка
@@ -63,11 +63,11 @@
 
 ## Скачать
 
-Бери AppImage из [последнего релиза](https://github.com/exviolet/rewrite-desktop/releases/latest):
+Бери AppImage из [последнего релиза](https://github.com/exviolet/sendoff/releases/latest):
 
 ```bash
-chmod +x Rewrite_*_amd64.AppImage
-./Rewrite_*_amd64.AppImage
+chmod +x Sendoff_*_amd64.AppImage
+./Sendoff_*_amd64.AppImage
 ```
 
 Нужен **glibc ≥ 2.35** — Ubuntu 22.04+, Debian 12+, Fedora 36+, Arch. Собирается
@@ -84,7 +84,7 @@ chmod +x Rewrite_*_amd64.AppImage
 > дистрибутив даёт 2.52+. Начиная с 2.52 WebKit пишет IndexedDB в новом формате
 > метаданных и **молча повышает базу при первом же открытии**, после чего AppImage
 > прочитать её больше не может — покажет пустой редактор и ошибку про storage.
-> Данные при этом целы и не перезаписываются: не сумев прочитать, Rewrite вообще
+> Данные при этом целы и не перезаписываются: не сумев прочитать, Sendoff вообще
 > перестаёт писать. Лечится возвратом на ту сборку, которой пользовался раньше.
 > Направление одностороннее: новый WebKit старую базу читает, старый новую — нет.
 
@@ -104,8 +104,8 @@ Auto-update нет: чтобы обновиться, скачай новый App
 ## Установка
 
 ```bash
-git clone --recurse-submodules https://github.com/exviolet/rewrite-desktop.git
-cd rewrite-desktop
+git clone --recurse-submodules https://github.com/exviolet/sendoff.git
+cd sendoff-desktop
 bun install
 ```
 
@@ -134,10 +134,10 @@ bun run build:bin   # собрать только бинарник (tauri build 
 дистрибутивах (почему — см. [Скачать](#скачать)):
 
 ```bash
-docker build -t rewrite-appimage-builder .
+docker build -t sendoff-appimage-builder .
 docker run --rm -v "$PWD":/src -u "$(id -u):$(id -g)" -e HOME=/tmp \
   -e CARGO_TARGET_DIR=/src/src-tauri/target-docker \
-  rewrite-appimage-builder bash -lc 'bun install && bun run build'
+  sendoff-appimage-builder bash -lc 'bun install && bun run build'
 ```
 
 Артефакт кладётся в `src-tauri/target-docker/release/bundle/appimage/`.
