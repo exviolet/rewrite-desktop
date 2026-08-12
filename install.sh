@@ -19,6 +19,19 @@ fi
 # обновление со старым бинарником и уехавшими данными.
 OLD_DATA="$HOME/.local/share/com.rewrite.app"
 NEW_DATA="$HOME/.local/share/dev.sendoff.app"
+if [ -d "$OLD_DATA" ] && [ ! -d "$NEW_DATA" ]; then
+  # Переносить каталог из-под работающего приложения нельзя. Хуже того, гард
+  # single-instance держит DBus-имя ПО IDENTIFIER, а он меняется: старый бинарь и
+  # новый друг друга не увидят и смогут работать одновременно на одной базе — это
+  # ровно тот случай, ради которого гард и заводился (запись переписывает снапшот
+  # целиком, отставший инстанс стирает чужое).
+  if pgrep -x rewrite-desktop >/dev/null 2>&1 || pgrep -x sendoff-desktop >/dev/null 2>&1; then
+    echo "!! Приложение запущено — закрой окно и повтори."
+    echo "   Каталог данных переезжает (com.rewrite.app → dev.sendoff.app), и делать"
+    echo "   это на живом инстансе нельзя. Установка прервана, ничего не тронуто."
+    exit 1
+  fi
+fi
 if [ -d "$OLD_DATA" ]; then
   if [ ! -d "$NEW_DATA" ]; then
     echo "→ перенос данных: com.rewrite.app → dev.sendoff.app…"
