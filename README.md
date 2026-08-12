@@ -1,66 +1,37 @@
 <div align="center">
 
-<img src="icon.svg" alt="Sendoff Desktop" width="112" height="112" />
+<img src="icon.svg" alt="Sendoff" width="112" height="112" />
 
-# Sendoff Desktop
+# Sendoff
 
-**Native desktop wrapper for [Sendoff](https://github.com/exviolet/sendoff-web) — built on Tauri v2.**
+**A prompt-first editor for terminal coding agents — fast, local, keyboard-driven.**
 
 <img src="https://img.shields.io/badge/license-MIT-8b5cf6?style=for-the-badge" alt="License MIT" />
 <img src="https://img.shields.io/badge/platform-Linux-c4b5fd?style=for-the-badge" alt="Platform: Linux" />
-<img src="https://img.shields.io/badge/status-personal_project-2a2650?style=for-the-badge" alt="Status: personal project" />
+<img src="https://img.shields.io/badge/version-0.2.x-2a2650?style=for-the-badge" alt="Version 0.2.x" />
 
 English · [Русский](README.ru.md)
 
 </div>
 
-This repo is the thin native shell around the [Sendoff](https://github.com/exviolet/sendoff-web)
-web app (included here as a git submodule). For what Sendoff *is* — the
-prompt-first workflow, features, and screenshots — read the
-[**web README**](https://github.com/exviolet/sendoff-web#readme). This file only
-covers building and installing the native binary.
+<div align="center">
 
-## What the wrapper adds
+<img src="docs/sendoff-demo.gif" alt="Drafting a multi-line prompt in Sendoff — the list continues itself — then Ctrl+Enter delivers it as one block to the tmux pane running Claude Code, which starts answering" width="900" />
 
-- Native file dialogs (open / save / import / export).
-- Custom title bar with window controls.
-- Reopen closed tabs (`Ctrl+Shift+T`).
-- Global toast notifications.
-- `tmux` integration via `tauri-plugin-shell` — send (`Ctrl+Enter`), target
-  picker (`Ctrl+Shift+Enter`), and per-tab window binding. The desktop build's
-  reason to exist.
-- [Orca ADE](https://github.com/stablyai/orca) integration — bind a tab to an
-  Orca agent and `Ctrl+Enter` sends the prompt into that agent's terminal
-  instead of a tmux pane.
-- [Herdr](https://herdr.dev) integration — same idea, bound to a Herdr agent
-  pane. Herdr persists pane ids, so unlike tmux and Orca the binding survives a
-  server restart or a reboot. **Needs Herdr ≥ 0.7**: pane ids changed shape after
-  0.6 (`w657cefe818690a-1` → `wK:p1`), and the older form is rejected by the
-  command allowlist — sending fails with a message that blames the permission
-  rather than the version.
-- One target picker for all three (`Ctrl+Shift+Enter`), sectioned by source; a
-  source that is not running simply has no section.
-- Live agent status in the status bar — a quiet dot while the agent works, a
-  visible label only when it is blocked waiting for your answer.
-- Exactly one instance runs: launching again exits immediately instead of opening
-  a second window. Two copies on one database would quietly eat each other's
-  work — a save rewrites the whole snapshot, so the instance with the staler view
-  wins and deletes whatever the other one created. The second launch does ask the
-  existing window to come forward, but Wayland compositors ignore an activation
-  request from a process you did not just interact with, so nothing visibly
-  happens there — measured on niri, both from the AppImage and from a source
-  build.
+<sub>Draft the prompt → <code>Ctrl+Enter</code> → it arrives in the <code>tmux</code> pane running your agent
+as a single block, already submitted.</sub>
 
-Everything else is the full browser feature set.
+</div>
 
-## Permissions
+Sendoff is a minimal text editor built around one workflow: write a prompt in a
+real editing surface, then fire it straight into the terminal agent you're
+already running. It was born from a concrete annoyance — the cramped input box
+in Claude Code and the awkward scrollback in long `tmux` sessions. Sendoff gives
+the prompt room to breathe before it's sent.
 
-The webview gets a deliberately narrow shell surface: `tmux`, plus `orca-ide`
-and `herdr` scoped to individual read/send subcommands. Scoping matters most for
-`herdr`: the same binary can also run arbitrary processes and tear down sessions,
-so it is allowlisted per subcommand rather than wholesale. No arbitrary process
-spawning, no network egress from the editor — home-directory file access is only safe because of
-that. See `src-tauri/capabilities/default.json`.
+No backend, no API keys, no telemetry, no network calls from the editor at all.
+
+> **Not** a pipeline builder, a knowledge base, or a code editor — by design.
 
 ## Download
 
@@ -93,7 +64,151 @@ Linux desktop has them; a bare container does not.
 No auto-update — to upgrade, download the new AppImage, or build from source and
 use `./update.sh`.
 
-## Requirements (building from source)
+## The core loop
+
+```mermaid
+flowchart LR
+    R["Sendoff<br/>draft the prompt"]
+    T["Bound target<br/>Herdr · Orca · tmux"]
+    P["Reference panel<br/>Ctrl+R"]
+
+    R -->|"Ctrl+Enter"| T
+    T -->|"paste the reply"| P
+    P -->|"keeps it in view"| R
+```
+
+Draft the prompt → `Ctrl+Enter` sends it to the terminal the tab is bound to →
+keep the agent's reply pinned in the reference panel while you write the next one.
+
+## Features
+
+**Prompt workflow**
+- **Send the prompt** (`Ctrl+Enter`) — push the current buffer into the terminal
+  the tab is bound to, without leaving the keyboard. Three kinds of target are
+  supported: [Herdr](https://herdr.dev) agents (**0.7 or newer** — pane ids changed
+  shape after 0.6 and the older form is rejected by the command allowlist),
+  [Orca ADE](https://github.com/stablyai/orca) agents, and plain `tmux` panes.
+  Multi-line prompts arrive as one block and are submitted once.
+- **Target picker** (`Ctrl+Shift+Enter`) — one list, sectioned by source, so you
+  pick an agent or a pane by name instead of relying on whatever is focused.
+  A source that is not running simply has no section.
+- **Tab binding** (`Ctrl+Alt+B` / `Ctrl+Alt+Shift+B`) — pin a tab to one target;
+  the status bar shows the live binding so `Ctrl+Enter` always lands in the right
+  place. Bindings store a stable descriptor and resolve the live handle on every
+  send, so they survive restarts. **When a binding is ambiguous, Sendoff asks
+  instead of guessing** — a prompt in the wrong agent is worse than an extra click.
+- **Live agent status** — the status bar shows what the bound agent is doing.
+  It stays a quiet dot while the agent works, and speaks up only when the agent
+  is blocked waiting for *your* answer.
+- **Trigger phrases** (`Ctrl+K`) — reusable prompt fragments. By default they go
+  in front of the whole prompt (they are usually role prefixes); a setting
+  switches insertion to the caret instead.
+- **Slash menu** (`/`) — the only trigger with no modifier at all. Typing `/` at
+  the start of a line or after a space opens an inline list: your trigger
+  phrases first, then markdown scaffolding (code block, headings, lists,
+  horizontal rule). It stays out of the way — a slash inside a word (`src/lib`,
+  `12/08`) is just text, `Escape` dismisses that slash for good, and phrases
+  picked here always land at the caret.
+- **Reference panel** (`Ctrl+R`) — a resizable, persisted side panel to keep an
+  agent's reply visible while you compose the follow-up.
+
+**Tabs that scale**
+- Tabbed editor with drag-and-drop reorder; survives restarts (75+ tabs daily).
+  Moving a tab never depends on a navigation cluster: `Ctrl+Shift+,` / `Ctrl+Shift+.`
+  work on 60% keyboards where `PgUp`/`PgDn` live on a function layer.
+- Tabs auto-name themselves from the first line; empty tabs auto-clean.
+- **Workspaces** (`Ctrl+Shift+W`) — group tabs by project; the tab bar shows
+  only the active workspace, and pins are per-workspace.
+- **Tab groups** (`Ctrl+G`) — colour-coded, named runs inside a workspace; collapse
+  a group to a single chip, drag it as a whole, or act on several tabs at once with
+  `Ctrl`+click. Collapsing only hides — it never closes anything.
+- **Tab switcher** (`Ctrl+T`) with a live content preview.
+- **Global tab search** (`Ctrl+Shift+D`) — full-text search across every tab,
+  deliberately cross-workspace (the escape hatch out of isolation).
+- **Pin tabs** (`Ctrl+P`) — keep important drafts pinned at the front of the tab bar.
+
+**Text tooling**
+- **Markdown editing** — `Ctrl+B` / `Ctrl+I` wrap (and unwrap) the selection or the
+  word under the cursor; `Tab` / `Shift+Tab` indent and nest list items; `Enter`
+  continues lists, numbering, checkboxes and blockquotes, and clears the marker on
+  an empty item; brackets, quotes and backticks close around a selection, and a
+  third backtick opens a fenced code block.
+- Find & Replace with a real-time highlight overlay.
+- Bulk find & replace with a diff preview before applying.
+- **Replace presets** — reusable bulk-replacement rule sets (the original use
+  case: tone conversion, e.g. `You/Your` → collaborative `We/Our`).
+- Markdown preview, distraction-free mode, command palette (`Ctrl+Shift+P`).
+
+**Under the hood**
+- Autosave to IndexedDB — close and reopen, everything's there. There is no manual
+  save: `Ctrl+S` only flushes the pending write immediately.
+- Closing a tab deletes nothing: it moves to an archive that survives restarts and
+  comes back with `Ctrl+Shift+T`.
+- Native file dialogs, drag-and-drop files into the editor, file import/export
+  (`.txt`, `.md`), plus full backup export/import.
+- Custom title bar with window controls; follows the native window theme.
+  Light / dark / system, and a configurable editor font (`Ctrl+,`).
+- **Exactly one instance runs.** Launching again exits immediately instead of
+  opening a second window. Two copies on one database would quietly eat each
+  other's work — a save rewrites the whole snapshot, so the instance with the
+  staler view wins and deletes whatever the other one created. The second launch
+  does ask the existing window to come forward, but Wayland compositors ignore an
+  activation request from a process you did not just interact with, so nothing
+  visibly happens there — measured on niri, both from the AppImage and a source build.
+
+## Keyboard shortcuts
+
+Every shortcut is rebindable — open the reference with `Ctrl+/` and click a chord
+to record a new one.
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+Enter` | Send buffer to the bound terminal (Herdr / Orca / tmux) |
+| `Ctrl+Shift+Enter` | Target picker (Herdr / Orca / tmux) |
+| `Ctrl+Alt+B` / `Ctrl+Alt+Shift+B` | Bind / unbind tab to a terminal |
+| `Ctrl+B` / `Ctrl+I` | Bold / italic (selection or word under the cursor) |
+| `Ctrl+M` / `Ctrl+Shift+M` | Inline code / fenced code block |
+| `Tab` / `Shift+Tab` | Indent / outdent — nests list items |
+| `Ctrl+R` | Toggle reference panel |
+| `Ctrl+K` | Trigger phrases |
+| `/` | Insert menu — trigger phrases and markdown scaffolding |
+| `Ctrl+T` | Tab switcher (with preview) |
+| `Ctrl+Shift+W` | Workspace switcher |
+| `Ctrl+G` | Put the tab into a group (picker with a create row) |
+| `Ctrl+Shift+D` | Global tab search |
+| `Ctrl+P` | Pin / unpin current tab |
+| `Ctrl+N` / `Ctrl+W` | New / close tab |
+| `Ctrl+Shift+T` | Reopen closed tab |
+| `Ctrl+Tab` / `Ctrl+Shift+Tab` | Next / previous tab |
+| `Ctrl+Shift+,` / `.` | Move the tab left / right along the bar |
+| `Ctrl+Shift+PgUp` / `PgDn` | Same, for keyboards with a nav cluster |
+| `Ctrl+Z` / `Ctrl+Shift+Z` | Undo / redo |
+| `Ctrl+F` / `Ctrl+H` | Find / Find & Replace |
+| `Ctrl+Shift+P` | Command palette |
+| `Ctrl+S` / `Ctrl+O` | Flush the pending write now (it is automatic) / open file |
+| `Ctrl+.` | Toggle presets sidebar |
+| `Alt+M` | Markdown preview |
+| `Ctrl+E` | Focus the editor |
+| `Ctrl+Shift+F` | Distraction-free mode |
+| `Ctrl+Shift+A` | Scroll to the active tab |
+| `Ctrl+,` | Settings |
+| `Ctrl+/` | Shortcuts reference (and rebinding) |
+| `Escape` | Close panels |
+
+## Security boundary
+
+The editor makes **no network calls** and spawns **no arbitrary processes**. The
+webview gets a deliberately narrow shell surface: `tmux`, plus `orca-ide` and
+`herdr` scoped to individual read/send subcommands. Scoping matters most for
+`herdr` — the same binary can also run arbitrary processes and tear down
+sessions, so it is allowlisted per subcommand rather than wholesale.
+
+Home-directory file access is only safe because of that boundary. The full
+manifest is `src-tauri/capabilities/default.json`.
+
+## Build from source
+
+### Requirements
 
 - [Bun](https://bun.sh/) ≥ 1.0
 - [Rust](https://rustup.rs/) (stable)
@@ -103,21 +218,21 @@ use `./update.sh`.
 
 > Linux-only by design. No Windows/macOS builds, no auto-update.
 
-## Setup
+### Setup
 
 ```bash
 git clone --recurse-submodules https://github.com/exviolet/sendoff.git
-cd sendoff-desktop
+cd sendoff
 bun install
 ```
 
-## Develop
+### Develop
 
 ```bash
 bun dev      # Vite dev server + Tauri window
 ```
 
-## Build & install
+### Build & install
 
 ```bash
 bun run build:bin   # build just the binary (tauri build --no-bundle)
@@ -126,9 +241,20 @@ bun run build:bin   # build just the binary (tauri build --no-bundle)
 ```
 
 `build:bin` skips AppImage/deb/rpm bundling — you don't need them for a
-`~/.local/bin` install. The full `bun run build` produces all three.
+`~/.local/bin` install. The full `bun run build` produces all three. After
+`install.sh` the app shows up in rofi / your app launcher.
 
-After `install.sh` the app shows up in rofi / your app launcher.
+### Update an installed copy
+
+```bash
+./update.sh   # git pull + sync web submodule + build:bin + install
+```
+
+Pulls `master`, checks out the pinned `web/` submodule commit, rebuilds the
+binary, and reinstalls in one step. Restart the app from your launcher after.
+
+> Close the app before updating. `install.sh` refuses to run while an instance is
+> alive, because the data directory can move between versions.
 
 ### Release artifacts
 
@@ -147,16 +273,14 @@ the AppImage is published: the `.deb` and `.rpm` come out of the same build but
 have never been installed on a Debian or Fedora system, and shipping untested
 packages is a promise this project cannot back.
 
-## Update an installed copy
+## Repo layout
 
-```bash
-./update.sh   # git pull + sync web submodule + build:bin + install
-```
+This repo is the product: the Tauri v2 shell, the release artifacts, and the
+integrations that make `Ctrl+Enter` land in a terminal.
 
-Pulls `master`, checks out the pinned `web/` submodule commit, rebuilds the
-binary, and reinstalls in one step. Restart the app from your launcher after.
-
-## Updating the web submodule (dev)
+The editor itself — React + Zustand + Vite — lives in
+[**sendoff-web**](https://github.com/exviolet/sendoff-web) and is pinned here as
+the `web/` git submodule. Clone with `--recurse-submodules` (see [Setup](#setup)).
 
 ```bash
 bun update-web                                  # bump web/ to its latest commit
@@ -165,12 +289,25 @@ git add web && git commit -m "chore: bump web submodule"
 
 ## Status
 
-A personal tool on `v0.1.x`, used daily on Linux. Public as a portfolio piece —
-**it works for me, but no support or stability is guaranteed.**
+A personal tool, used daily on Linux, on `v0.2.x`. Public so it can serve as a
+portfolio piece — **it works for me, but no support or stability is guaranteed.**
+Expect fast, unannounced breaking changes.
 
-Honest scope: Linux-only, x86_64 only, no auto-update, and issues may sit. Tests
-cover pure logic and the IndexedDB layer only. Contributions aren't being
-solicited — fork freely instead.
+Honest scope, so nobody wastes an evening: Linux-only, x86_64 only, no
+auto-update, no data migrations (breaking changes land as clean sweeps), and
+issues may sit. Tests cover pure logic and the IndexedDB layer only — components
+and hooks are not covered on purpose. Contributions aren't being solicited —
+fork freely instead.
+
+> Formerly called **Rewrite**. Renamed in August 2026: the name read as
+> "AI paraphraser" — which is the one thing this editor deliberately is not —
+> and collided with [OpenRewrite](https://github.com/openrewrite/rewrite).
+
+## Credits
+
+Bundles [JetBrains Mono](https://www.jetbrains.com/lp/mono/) (v2.304), licensed
+under the [SIL Open Font License 1.1](https://github.com/exviolet/sendoff-web/blob/master/public/assets/fonts/JetBrainsMono-OFL.txt).
+A system Nerd Font is preferred when present, so agent output keeps its icons.
 
 ## License
 
