@@ -47,9 +47,14 @@ in a container on Ubuntu 22.04 for exactly that reason; an AppImage bundles its
 libraries but *not* glibc, so building on a rolling distro would produce a file
 that only runs on rolling distros.
 
-It expects a normal desktop system for the handful of libraries AppImage
-deliberately does not bundle (X11/Wayland, OpenGL, fontconfig, freetype). Any
-Linux desktop has them; a bare container does not.
+It expects a normal desktop system for the libraries AppImage deliberately does
+not bundle — graphics and text shaping: `libGL`, `libEGL`, `libgbm`, `libdrm`,
+`libX11`, `libX11-xcb`, `libxcb`, `libfontconfig`, `libfreetype`, `libharfbuzz`,
+`libfribidi`, `libexpat`. Any Linux desktop has them; a bare container does not.
+Everything else, WebKitGTK included, travels inside the AppImage — verified by
+running it on a container with zero webkit and zero GTK packages installed, where
+it gets all the way to "Failed to initialize GTK", i.e. it stops at the missing
+display rather than at a missing symbol.
 
 > ⚠️ **Don't mix the AppImage and a source build on the same machine.** Both use
 > the same data directory, but the AppImage bundles WebKitGTK 2.50 while a current
