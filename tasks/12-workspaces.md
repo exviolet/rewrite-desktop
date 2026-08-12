@@ -8,7 +8,7 @@
 > в неясность — спроси, не угадывай.
 
 > **Известный размен:** `WorkspaceSwitcher` станет **шестой** копией паттерна
-> «модалка-пикер» ([#9](https://github.com/exviolet/rewrite-desktop/issues/9) — извлечение
+> «модалка-пикер» ([#9](https://github.com/exviolet/sendoff/issues/9) — извлечение
 > примитива сознательно отложено до после Workspaces). Поэтому писать его **строго по
 > существующему паттерну** (`TmuxTargetPicker` / `OrcaTargetPicker`), не изобретая свой —
 > чтобы будущее извлечение осталось механическим.
@@ -26,11 +26,11 @@ Workspace = **изолированная группа табов**. Перекл
 
 - **Изоляция, не группировка.** Переключение workspace **фильтрует** TabBar. Браузерные
   сворачиваемые группы (всё видно) — **отклонены в v1**, запаркованы в
-  [#4](https://github.com/exviolet/rewrite-desktop/issues/4). Не строим два org-механизма разом.
+  [#4](https://github.com/exviolet/sendoff/issues/4). Не строим два org-механизма разом.
 - **Один workspace на таб** (партиция, не теги).
 - **Пины — по-workspace.** Закреплённый таб виден только в своём workspace.
 - **UI переключения — только свитчер-модалка** (`Ctrl+Shift+W`). Сайдбар (постоянный /
-  скрытый / hover) запаркован в [#7](https://github.com/exviolet/rewrite-desktop/issues/7);
+  скрытый / hover) запаркован в [#7](https://github.com/exviolet/sendoff/issues/7);
   дропдаун в таб-баре отклонён.
 - Новый таб создаётся **в активном workspace**. Перенос — контекстное меню + палитра.
 - Каждый workspace помнит **свой last-active таб**.
@@ -152,7 +152,7 @@ export interface Tab {
 
 - **DB v4 → v5.** В `upgrade`: `if (oldVersion < 5) db.createObjectStore("workspaces", { keyPath: "id" })`.
   Это **аддитивно** — существующие `tabs`/`presets`/`triggerPhrases` не трогаем, миграции данных нет.
-- Схема `RewriteDB`: добавить стор `workspaces: { key: string; value: Workspace }`.
+- Схема `SendoffDB`: добавить стор `workspaces: { key: string; value: Workspace }`.
 - `meta`: новые ключи `activeWorkspaceId` (string), `workspaceOrder` (string[]).
 - `loadSession` — вернуть `workspaces` (упорядоченные по `workspaceOrder`, как `orderTabs`) и
   `activeWorkspaceId`.

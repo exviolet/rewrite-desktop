@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Rewrite",
-  "version": "0.1.1",
-  "identifier": "com.rewrite.app",
+  "productName": "Sendoff",
+  "version": "0.2.0",
+  "identifier": "dev.sendoff.app",
   "build": {
     "frontendDist": "../web/dist",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Rewrite",
+        "title": "Sendoff",
         "decorations": false,
         "width": 1200,
         "height": 800,

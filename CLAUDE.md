@@ -1,9 +1,9 @@
-# Project Contract — Rewrite Desktop
+# Project Contract — Sendoff Desktop
 
 > Этот файл — контракт сотрудничества между разработчиком и любым AI-агентом (Claude Code, Codex, Cursor, Aider). `AGENTS.md` — symlink сюда. Долгоживущие решения и roadmap живут в `docs/`, не в этом файле.
 
 ## Product Positioning
-- **Rewrite — prompt-first editor.** Цель: быстро формулировать LLM-промпты вне маленького input в Claude Code и неудобного scroll в tmux.
+- **Sendoff — prompt-first editor.** Цель: быстро формулировать LLM-промпты вне маленького input в Claude Code и неудобного scroll в tmux.
 - Не pipeline-builder, не knowledge base, не code editor.
 - При любой новой фиче — сверять с позиционированием и приоритетом в [docs/ROADMAP.md](docs/ROADMAP.md). Pipeline/transformation-направление = red flag scope creep.
 
@@ -20,12 +20,12 @@
 - GUI прошёл dogfooding: ежедневное использование, 75+ табов накопилось. Это значит UX-боль реальна, но не блокирует.
 
 ## Repo Layout
-- `web/` — git submodule [exviolet/rewrite] (browser SPA, React + Zustand + Vite).
+- `web/` — git submodule [exviolet/sendoff-web] (browser SPA, React + Zustand + Vite).
 - `src-tauri/src/lib.rs` — точка входа Tauri v2 wrapper.
 - `src-tauri/capabilities/default.json` — permission manifest.
 - `src-tauri/tauri.conf.json` — Tauri-конфиг.
 - `install.sh` / `uninstall.sh` — установка/удаление бинарника в `~/.local/` (Linux only).
-- `update.sh` — обновление установленного Rewrite для консюмера (pull → sync submodule → `build:bin` → install).
+- `update.sh` — обновление установленного Sendoff для консюмера (pull → sync submodule → `build:bin` → install).
 - `docs/ROADMAP.md` — позиционирование, приоритеты, отказы. Источник правды по продуктовым решениям.
 - `tasks/` — детальные task-спеки для приоритетных фич (создаются по мере того, как фича становится active).
 - `HANDOFF.md` — per-session state (в `.gitignore`).
@@ -37,20 +37,20 @@
 - Тесты: `cd web && bun test` (встроенный раннер bun; покрыты чистая логика и слой IndexedDB, компоненты — нет)
 - Build production (полный бандл, AppImage/deb/rpm): `bun run build` — собирает все три. Скрипт выставляет `NO_STRIP=1`: **не убирать**, иначе AppImage снова падает (см. ниже). Для install в `~/.local/bin` не нужен.
   > **Почему `NO_STRIP=1`.** `linuxdeploy` таскает внутри себя `strip` из старых binutils, а системные библиотеки Arch собраны с `-z pack-relative-relocs` и содержат секцию `.relr.dyn` (`SHT_RELR`, тип `0x13`), которую тот `strip` не понимает → `failed to run linuxdeploy` без причины в выводе. Цена флага измерена и близка к нулю: AppDir 287 → 283 МБ (1.4%), потому что библиотеки Arch и так поставляются стрипнутыми. Диагноз 2026-08-09.
-- Build бинаря без бандла: `bun run build:bin` (`tauri build --no-bundle`) — только `target/release/rewrite-desktop`, linuxdeploy не запускается. Основной путь для install.
+- Build бинаря без бандла: `bun run build:bin` (`tauri build --no-bundle`) — только `target/release/sendoff-desktop`, linuxdeploy не запускается. Основной путь для install.
 - **Release-артефакты — только через контейнер** (`Dockerfile`, Ubuntu 22.04), не хостовой сборкой:
   ```bash
-  docker build -t rewrite-appimage-builder .
+  docker build -t sendoff-appimage-builder .
   docker run --rm -v "$PWD":/src -u "$(id -u):$(id -g)" -e HOME=/tmp \
     -e CARGO_TARGET_DIR=/src/src-tauri/target-docker \
-    rewrite-appimage-builder bash -lc 'bun install && bun run build'
+    sendoff-appimage-builder bash -lc 'bun install && bun run build'
   ```
   > **Почему не хостом.** AppImage бандлит библиотеки, но **не glibc**: внутрь кладутся системные библиотеки сборочной машины, и они требуют её glibc. Собранный на Arch артефакт требовал **glibc 2.43** и не запускался нигде, кроме rolling-дистрибутивов — то есть ровно у тех, кто и так собирает из исходников. Ubuntu 22.04 даёт **2.35**: Ubuntu 22.04+, Debian 12+, Fedora 36+, Arch. Отдельный `CARGO_TARGET_DIR` обязателен — иначе Arch- и Ubuntu-объектники перетирают друг друга и обе сборки идут с нуля. Измерено 2026-08-09.
   >
   > Публикуется **только AppImage**. `.deb`/`.rpm` собираются той же командой, но их никто не ставил на Debian/Fedora — непроверенный артефакт в публичном релизе хуже его отсутствия.
 - Update web submodule (dev, бамп указателя): `bun update-web`
 - Install / remove binary: `./install.sh` / `./uninstall.sh`
-- Обновить установленный Rewrite (консюмер): `./update.sh`
+- Обновить установленный Sendoff (консюмер): `./update.sh`
 
 ## Verification
 | Изменения в | Команды |

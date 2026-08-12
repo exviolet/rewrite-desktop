@@ -8,7 +8,7 @@
 
 Усилить уже добавленный `Ctrl+T` tab switcher: сейчас он помогает найти таб, но preview слишком закрытый и не всегда даёт быстро понять, тот ли это prompt.
 
-Нужен более наглядный preview выбранного таба без превращения Rewrite в workspace manager, knowledge base или tab organizer.
+Нужен более наглядный preview выбранного таба без превращения Sendoff в workspace manager, knowledge base или tab organizer.
 
 ## Acceptance criteria
 

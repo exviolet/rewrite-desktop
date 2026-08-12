@@ -6,7 +6,7 @@
 
 ## Цель
 
-Закрыть исходную боль, ради которой создавался Rewrite: написал промпт в редакторе → одной комбинацией клавиш отправить его в активную tmux pane (где запущен Claude Code или другая CLI), без переключения окон, копирования и вставки.
+Закрыть исходную боль, ради которой создавался Sendoff: написал промпт в редакторе → одной комбинацией клавиш отправить его в активную tmux pane (где запущен Claude Code или другая CLI), без переключения окон, копирования и вставки.
 
 Текущий flow: написал → Ctrl+A → Ctrl+C → переключился в tmux → Ctrl+V → Enter. **5 действий вместо одного.**
 
@@ -109,7 +109,7 @@ web/src/store/settingsStore.ts                    # +tmuxAutoSubmit, tmuxTarget
 Manual (UI и tmux нельзя автотестить без harness):
 
 1. Запустить tmux, в одной pane запустить `cat` (он будет эхо-выводить полученное).
-2. В Rewrite написать «hello world», Ctrl+Enter → в pane должно появиться `hello world\n`.
+2. В Sendoff написать «hello world», Ctrl+Enter → в pane должно появиться `hello world\n`.
 3. Выделить часть текста → Ctrl+Enter → отправляется только выделение.
 4. Отключить auto-submit в settings → Ctrl+Enter → текст в pane без Enter.
 5. Указать несуществующий target pane → toast с ошибкой, приложение работает.
@@ -122,7 +122,7 @@ Manual (UI и tmux нельзя автотестить без harness):
 
 ## Риски / open questions
 
-- **Cross-platform.** На macOS tmux обычно есть. На Windows tmux нет — но Rewrite-desktop пока Linux-only (см. позиционирование/install.sh). Если когда-нибудь Windows — будет другой механизм (PowerShell? Windows Terminal API?). Сейчас Linux/macOS only, ОК.
+- **Cross-platform.** На macOS tmux обычно есть. На Windows tmux нет — но Sendoff-desktop пока Linux-only (см. позиционирование/install.sh). Если когда-нибудь Windows — будет другой механизм (PowerShell? Windows Terminal API?). Сейчас Linux/macOS only, ОК.
 - **Threat model expansion.** Добавление shell-доступа (даже точечно к tmux) — отход от strict local-first. Зафиксировать в `CLAUDE.md` явно: «`tmux` allowed, остальной shell — нет».
 - **tmux буферизация.** Длинные тексты (>4KB) могут обрезаться. Если столкнёмся — переключиться на `load-buffer` + `paste-buffer`.
 
@@ -142,4 +142,4 @@ Manual (UI и tmux нельзя автотестить без harness):
 - [x] Manual test plan пройден (вручную в `bun dev`): full tab и selection приходят в `cat` внутри tmux.
 - [x] Коммиты:
   - `feat(tmux): отправка промпта в pane по Ctrl+Enter` в `web`.
-  - `feat(tmux): добавить shell-доступ для отправки в pane` в `rewrite-desktop`.
+  - `feat(tmux): добавить shell-доступ для отправки в pane` в `sendoff-desktop`.

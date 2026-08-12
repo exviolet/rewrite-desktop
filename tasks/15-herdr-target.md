@@ -51,7 +51,7 @@
   ```json
   {"id":"cli:agent:list","result":{"type":"agent_list","agents":[{
     "pane_id":"wK:p1","tab_id":"wK:t1","workspace_id":"wK","terminal_id":"term_…",
-    "agent":"claude","agent_status":"working","cwd":"/home/…/rewrite-desktop",
+    "agent":"claude","agent_status":"working","cwd":"/home/…/sendoff-desktop",
     "focused":true,"terminal_title_stripped":"…"}]}}
   ```
   Один вызов даёт всё: и семантику агента, и хендл. Джоин двух команд (как в Orca) **не нужен**.
@@ -111,7 +111,7 @@ export type TabBinding =
   | { source: "herdr"; paneId: string; workspace: string; tab: string };
 ```
 
-`workspace`/`tab` у herdr — это **лейблы** (`rewrite-desktop`, `1`), а не id: id-шники
+`workspace`/`tab` у herdr — это **лейблы** (`sendoff-desktop`, `1`), а не id: id-шники
 (`wK`) внутренние и пересобираются, лейблы человекочитаемы и попадают в бейдж таба.
 
 **Старые привязки не теряем.** `normalizeTab` (`lib/tabUtils.ts`) при чтении
@@ -136,7 +136,7 @@ export interface TerminalTarget {          // строка в пикере
   key: string;                             // уникальный ключ строки (source + handle)
   handle: string;                          // что уедет в send()
   binding: TabBinding;                     // что сохранится в таб при bind
-  primary: string;                         // "claude · rewrite-desktop / 1"
+  primary: string;                         // "claude · sendoff-desktop / 1"
   secondary?: string;                      // cwd или превью промпта
   status?: string;                         // agent_status / state — бейдж
   isActive?: boolean;                      // focused — для преселекта
@@ -312,7 +312,7 @@ export interface TerminalProvider {
 8. Рестарт herdr-сервера → `pane_id` тот же → привязка пережила (то, чего не умеют
    ни tmux, ни orca).
 9. Остановить herdr-сервер → секция herdr исчезла, tmux/orca работают.
-10. Перезапуск Rewrite → привязка восстановлена. **Легаси:** таб со старой
+10. Перезапуск Sendoff → привязка восстановлена. **Легаси:** таб со старой
     `tmuxBinding`/`orcaBinding` открылся с рабочей привязкой.
 11. Полоса табов реактивна при смене привязки (проверка `tabsMetaEqual`).
 12. `bun tsc -b` + `bun lint` + `bun run build` = 0.
@@ -327,7 +327,7 @@ export interface TerminalProvider {
 - **НЕ read-сторона.** `agent read` — тот же TUI-рендер, что провалил спайк 2a; чистого
   `lastAssistantMessage` у herdr нет. Зеркало ответа остаётся orca-only.
 - **НЕ голые шеллы как таргет** (решение 2 автора) — только панели с распознанным агентом.
-- **НЕ `agent start`, `pane run`, `tab create`** — Rewrite не спавнит агентов и процессы.
+- **НЕ `agent start`, `pane run`, `tab create`** — Sendoff не спавнит агентов и процессы.
 - **НЕ `--wait`/`agent wait`** в UI-потоке.
 - **НЕ bracketed-paste/settle для herdr** — CLI делает сам, ручная обёртка утечёт в промпт.
 - **НЕ bump версии БД** — схема стора табов не меняется, `binding` аддитивен, легаси

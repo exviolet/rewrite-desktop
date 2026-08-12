@@ -8,7 +8,7 @@
 
 Дать место для временного reference/context рядом с основным prompt: фрагменты ошибки, требования, заметки из другой сессии, список ограничений. Сейчас это приходится держать в голове, в отдельном табе или во внешнем окне.
 
-Это остаётся в рамках Rewrite как prompt-first editor. Reference panel — вспомогательная scratch-зона для текущей формулировки prompt, не knowledge base и не workspace system.
+Это остаётся в рамках Sendoff как prompt-first editor. Reference panel — вспомогательная scratch-зона для текущей формулировки prompt, не knowledge base и не workspace system.
 
 ## Принятое решение
 

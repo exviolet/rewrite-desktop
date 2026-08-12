@@ -1,7 +1,7 @@
 # Task 13 — Извлечение примитива модалки-пикера
 
 **Status:** **done** — все фазы + CommandPalette (web merge `8257c7e`, ветка удалена)
-**Issue:** [#9](https://github.com/exviolet/rewrite-desktop/issues/9)
+**Issue:** [#9](https://github.com/exviolet/sendoff/issues/9)
 **Owner:** Claude Opus (planner + executor)
 
 > Рефакторинг 6 работающих модалок в daily-driver'е → **не big-bang**, поэтапно, каждый

@@ -1,4 +1,4 @@
-# Task 11 — Orca send (Phase 1: Rewrite → Orca-агент)
+# Task 11 — Orca send (Phase 1: Sendoff → Orca-агент)
 
 **Status:** active (spec ready)
 **Priority:** Orca-интеграция Phase 1 (см. [docs/ROADMAP.md](../docs/ROADMAP.md) секция «Orca ADE»)
@@ -13,7 +13,7 @@
 
 `Ctrl+Enter` умеет отправлять промпт не только в tmux-pane, но и в **терминал
 Orca-агента** (Orca ADE, CLI `orca-ide`). Боль: у Orca нет своей prompt-поверхности —
-агент живёт в тесном TUI; Rewrite даёт комфортный ввод + умную многострочную отправку.
+агент живёт в тесном TUI; Sendoff даёт комфортный ввод + умную многострочную отправку.
 
 **Только send (Phase 1).** Чтение ответа агента (reference panel `orca-agent`-режим) —
 Phase 2, НЕ в этом таске.
@@ -87,7 +87,7 @@ Phase 2, НЕ в этом таске.
 
 Добавить в `shell:allow-execute.allow` (рядом с `tmux`) **скоупленные** entries. Форма
 allow-entry: `{ "name": ..., "cmd": "orca-ide", "args": [<строка | {"validator":"<regex>"}> ...] }`.
-Rewrite шлёт РОВНО фиксированные формы ниже (всегда `--json`, фиксированный порядок) —
+Sendoff шлёт РОВНО фиксированные формы ниже (всегда `--json`, фиксированный порядок) —
 чтобы валидаторы совпадали:
 
 - **send text:** `["terminal","send","--terminal",{v:"term_[0-9a-fA-F-]+"},"--text",{v:"[\\s\\S]*"},"--json"]`
@@ -155,7 +155,7 @@ Rewrite шлёт РОВНО фиксированные формы ниже (вс
 ## Test plan (manual, в Orca live)
 
 1. В Orca открыть worktree с запущенным агентом (Claude Code/codex).
-2. Rewrite: command palette → `orca-bind` → picker показывает агента с agentType/state →
+2. Sendoff: command palette → `orca-bind` → picker показывает агента с agentType/state →
    выбрать. Индикатор привязки появился на табе.
 3. Написать многострочный промпт, `Ctrl+Enter` → в TUI агента прилетел **весь блок
    одним куском** (не построчно), submit сработал один раз. (codex — если submit не
@@ -164,7 +164,7 @@ Rewrite шлёт РОВНО фиксированные формы ниже (вс
 5. Закрыть агента в Orca → `Ctrl+Enter` → тост «не найден» + picker.
 6. `orca-unbind` → таб снова шлёт в tmux (если был tmux-fallback) или в никуда → picker.
 7. Привязать таб к tmux → `orcaBinding` сброшен, и наоборот.
-8. Перезапуск Rewrite → `orcaBinding` восстановлен.
+8. Перезапуск Sendoff → `orcaBinding` восстановлен.
 9. Verification: `cd web && bun tsc -b && bun lint` clean; `bun run build` (манифест) ок.
 
 ## Явные отказы

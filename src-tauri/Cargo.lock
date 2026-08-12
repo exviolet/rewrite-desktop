@@ -3508,23 +3508,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "rewrite-desktop"
-version = "0.1.1"
-dependencies = [
- "log",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-dialog",
- "tauri-plugin-fs",
- "tauri-plugin-log",
- "tauri-plugin-mcp-bridge",
- "tauri-plugin-shell",
- "tauri-plugin-single-instance",
-]
-
-[[package]]
 name = "rfd"
 version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3745,6 +3728,23 @@ checksum = "d767eb0aabc880b29956c35734170f26ed551a859dbd361d140cdbeca61ab1e2"
 dependencies = [
  "serde",
  "serde_core",
+]
+
+[[package]]
+name = "sendoff-desktop"
+version = "0.2.0"
+dependencies = [
+ "log",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-dialog",
+ "tauri-plugin-fs",
+ "tauri-plugin-log",
+ "tauri-plugin-mcp-bridge",
+ "tauri-plugin-shell",
+ "tauri-plugin-single-instance",
 ]
 
 [[package]]

@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "rewrite-desktop",
+      "name": "sendoff-desktop",
       "devDependencies": {
         "@tauri-apps/cli": "^2.10.1",
       },

@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Rewrite
-Comment=Minimal text editor with bulk replacements
-Exec=rewrite-desktop
-Icon=rewrite
-Type=Application
-Categories=Utility;TextEditor;
-StartupWMClass=Rewrite
-Terminal=false
