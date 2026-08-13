@@ -123,7 +123,9 @@ keep the agent's reply pinned in the reference panel while you write the next on
   work on 60% keyboards where `PgUp`/`PgDn` live on a function layer.
 - Tabs auto-name themselves from the first line; empty tabs auto-clean.
 - **Workspaces** (`Ctrl+Shift+W`) — group tabs by project; the tab bar shows
-  only the active workspace, and pins are per-workspace.
+  only the active workspace, and pins are per-workspace. `F2` opens rename and
+  delete inside the switcher itself — deleting a workspace moves its tabs to the
+  next one instead of discarding them, and says so before you commit.
 - **Tab groups** (`Ctrl+G`) — colour-coded, named runs inside a workspace; collapse
   a group to a single chip, drag it as a whole, or act on several tabs at once with
   `Ctrl`+click. Collapsing only hides — it never closes anything.
