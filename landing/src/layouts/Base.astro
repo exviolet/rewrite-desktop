@@ -1,0 +1,46 @@
+---
+// Шрифты — пакетами, не ссылкой на CDN: у посетителя нет обращения к чужому хосту,
+// а страница не ломается от чужого даунтайма. Ось opsz нужна обеим начертаниям
+// Newsreader, поэтому берётся opsz-набор, а не wght.
+import "@fontsource-variable/newsreader/opsz.css";
+import "@fontsource-variable/newsreader/opsz-italic.css";
+import "@fontsource/commit-mono/400.css";
+import "@fontsource/commit-mono/500.css";
+import "@fontsource/commit-mono/700.css";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0a0912" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- TODO(демо): og:image появится вместе с пересъёмкой — первый кадр нового
+         дубля. Соцсети кешируют превью надолго, поэтому ставить сюда кадр со
+         старым путём `rewrite-desktop` дороже, чем не ставить ничего. -->
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

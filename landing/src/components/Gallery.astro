@@ -1,0 +1,164 @@
+---
+// Галерея заменяет собой список фич: роадмап запрещает пересказывать README, но
+// страница совсем без содержания — пустая обложка. Развязка — показывать кадрами
+// и держать ровно одну строку подписи на кадр.
+//
+// TODO(кадры): снимать с демо-профиля (`demo-seed.json` из rewrite-demo-assets),
+// НЕ с рабочего окна — там 75+ реальных табов с настоящими промптами. Тогда
+// галерея и видео показывают один вымышленный проект и читаются как одна история.
+// `shot` ниже — это и есть список на съёмку.
+const shots = [
+  {
+    id: "target-picker",
+    title: "Pick the agent by name",
+    caption:
+      "One list, sectioned by source. A source that is not running simply has no section.",
+    shot: "Ctrl+Shift+Enter, секции Herdr / Orca / tmux видны одновременно",
+    span: 2,
+  },
+  {
+    id: "workspaces",
+    title: "Tabs that scale",
+    caption: "Workspaces per project, colour-coded groups, pins that stay put.",
+    shot: "полоса табов с раскрытой группой + пикер workspace поверх",
+    span: 1,
+  },
+  {
+    id: "slash-menu",
+    title: "Structure without leaving the keyboard",
+    caption: "A slash opens phrases and markdown scaffolding right at the caret.",
+    shot: "меню `/` открыто в середине набранного промпта",
+    span: 1,
+  },
+  {
+    id: "reference",
+    title: "The answer stays in view",
+    caption: "A resizable side panel holds the reply while the next prompt is written.",
+    shot: "reference-панель справа с ответом агента, редактор слева",
+    span: 2,
+  },
+];
+---
+
+<section id="look">
+  <div class="shell">
+    <div class="section-head">
+      <span class="num">02</span>
+      <h2>A look at it</h2>
+    </div>
+
+    <p class="lede">
+      Four things worth seeing. Everything else is in the README — this page would rather show than
+      list.
+    </p>
+
+    <div class="grid">
+      {
+        shots.map((s) => (
+          <figure class="shot" data-span={s.span} id={s.id}>
+            <div class="frame">
+              {/* TODO(кадры): <Image> вместо заглушки, когда появятся PNG. */}
+              <div class="placeholder">
+                <p class="mono-label">{s.id}</p>
+                <p class="shot-note">{s.shot}</p>
+              </div>
+            </div>
+            <figcaption>
+              <h3>{s.title}</h3>
+              <p>{s.caption}</p>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid {
+    margin-top: var(--gap-lg);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap-md) 1.5rem;
+  }
+
+  /* Асимметрия намеренная: два широких кадра и два узких вместо ровной решётки
+     из четырёх. Ровная сетка читается как каталог, а страница — не каталог. */
+  .shot[data-span="2"] {
+    grid-column: span 2;
+  }
+
+  /* Колонка, чтобы подпись можно было прижать к низу. Без этого соседи по ряду
+     разной высоты разводят подписи по вертикали, и ряд выглядит сломанным. */
+  .shot {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .frame {
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    background: var(--panel-solid);
+    overflow: hidden;
+    transition:
+      border-color 0.25s var(--ease),
+      transform 0.25s var(--ease);
+  }
+
+  .shot:hover .frame {
+    border-color: var(--violet-deep);
+    transform: translateY(-2px);
+  }
+
+  /* Соотношение разное по ширине блока, иначе широкий кадр выходит вдвое выше
+     узкого: удвоенная ширина при общем aspect-ratio даёт удвоенную высоту.
+     Реальные скриншоты придут со своими пропорциями — эти правила только для
+     заглушек, и вместе с ними уйдут. */
+  .placeholder {
+    aspect-ratio: 4 / 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: var(--gap-sm);
+    text-align: center;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      #ffffff05 0 1px,
+      transparent 1px 11px
+    );
+  }
+
+  .shot-note {
+    font-size: 0.76rem;
+    color: var(--ink-faint);
+    max-width: 34ch;
+  }
+
+  .shot[data-span="2"] .placeholder {
+    aspect-ratio: 16 / 9;
+  }
+
+  figcaption {
+    margin-top: auto;
+    padding-top: 0.9rem;
+  }
+
+  figcaption p {
+    margin-top: 0.3rem;
+    font-size: 0.84rem;
+    color: var(--ink-dim);
+    max-width: 46ch;
+  }
+
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .shot[data-span="2"] {
+      grid-column: auto;
+    }
+  }
+</style>
