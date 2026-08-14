@@ -1,5 +1,82 @@
 use tauri::Manager;
 
+/// Картинка из буфера обмена → файл на диске → абсолютный путь в промпт.
+///
+/// Спайк 2026-08-13 подтвердил канал живьём: и Claude Code, и Codex открывают картинку
+/// по абсолютному пути (проверено на изображении со случайным числом — угадать нельзя,
+/// значит файл действительно читали). Но `send-keys` проносит только текст, поэтому
+/// картинку из буфера надо сперва материализовать.
+///
+/// Почему своя команда, а не `fs:allow-write-file` из плагина: та permission открывает
+/// вебвью ТРИ команды — `write_file`, `open`, `write` (проверено в
+/// gen/schemas/acl-manifests.json, plugin-fs 2.4.5; собственное описание permission
+/// упоминает только первую). В паре с уже выданным `fs:scope-home-recursive` это
+/// generic open+write по всему домашнему каталогу — несоразмерно задаче «сохранить
+/// один PNG в свой же каталог данных».
+///
+/// Здесь вебвью не задаёт НИЧЕГО, кроме самих байтов:
+/// - каталог назначения берётся из `app_local_data_dir()`,
+/// - имя генерируется тут же,
+/// - расширение выводится из сигнатуры файла, а не приходит строкой из JS —
+///   поэтому путь вида `../../evil.sh` невозможен не по проверке, а по отсутствию входа.
+#[tauri::command]
+fn save_clipboard_image(
+  app: tauri::AppHandle,
+  request: tauri::ipc::Request,
+) -> Result<String, String> {
+  // Сырое тело, а не JSON: скриншот на несколько мегабайт в виде массива чисел
+  // сериализуется и разбирается заметно дольше самой записи на диск.
+  let tauri::ipc::InvokeBody::Raw(bytes) = request.body() else {
+    return Err("expected a raw request body".into());
+  };
+
+  let ext = sniff_image_ext(bytes).ok_or("unsupported image format")?;
+
+  let dir = app
+    .path()
+    .app_local_data_dir()
+    .map_err(|err| format!("no app data dir: {err}"))?
+    .join("images");
+  std::fs::create_dir_all(&dir).map_err(|err| format!("cannot create {dir:?}: {err}"))?;
+
+  // Миллисекунд мало: две вставки подряд попадают в одну и ту же. Счётчик процесса
+  // разводит их, не заводя зависимости ради uuid.
+  static SEQ: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(0);
+  let millis = std::time::SystemTime::now()
+    .duration_since(std::time::UNIX_EPOCH)
+    .map_err(|err| format!("clock before epoch: {err}"))?
+    .as_millis();
+  let seq = SEQ.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+  let path = dir.join(format!("sendoff-{millis}-{seq}.{ext}"));
+
+  std::fs::write(&path, bytes).map_err(|err| format!("cannot write {path:?}: {err}"))?;
+
+  path
+    .to_str()
+    .map(str::to_owned)
+    .ok_or_else(|| "image path is not valid UTF-8".into())
+}
+
+/// Формат по сигнатуре, а не по тому, что скажет фронт. Список закрытый: сюда попадает
+/// только то, что агент на том конце действительно откроет.
+fn sniff_image_ext(bytes: &[u8]) -> Option<&'static str> {
+  const PNG: &[u8] = &[0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A];
+  if bytes.starts_with(PNG) {
+    return Some("png");
+  }
+  if bytes.starts_with(&[0xFF, 0xD8, 0xFF]) {
+    return Some("jpg");
+  }
+  if bytes.starts_with(b"GIF87a") || bytes.starts_with(b"GIF89a") {
+    return Some("gif");
+  }
+  // RIFF....WEBP — четыре байта размера между сигнатурами не проверяем.
+  if bytes.len() > 12 && bytes.starts_with(b"RIFF") && &bytes[8..12] == b"WEBP" {
+    return Some("webp");
+  }
+  None
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   // WebKitGTK (Linux): DMABUF-рендерер даёт tearing/артефакты при скролле на части
@@ -105,6 +182,7 @@ pub fn run() {
   }
 
   builder
+    .invoke_handler(tauri::generate_handler![save_clipboard_image])
     .setup(|app| {
       if cfg!(debug_assertions) {
         app.handle().plugin(

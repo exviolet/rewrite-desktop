@@ -114,6 +114,11 @@ keep the agent's reply pinned in the reference panel while you write the next on
   horizontal rule). It stays out of the way — a slash inside a word (`src/lib`,
   `12/08`) is just text, `Escape` dismisses that slash for good, and phrases
   picked here always land at the caret.
+- **Images by path** — paste a screenshot (`Ctrl+V`) or pick a file from the
+  palette, and Sendoff drops its absolute path into the prompt. Coding agents
+  read images from a path, so this is what actually reaches them: the terminal
+  carries text, not pixels. A pasted image is written into Sendoff's own data
+  directory; a picked file is referenced where it already lies, never copied.
 - **Reference panel** (`Ctrl+R`) — a resizable, persisted side panel to keep an
   agent's reply visible while you compose the follow-up.
 
@@ -176,6 +181,7 @@ to record a new one.
 | `Ctrl+B` / `Ctrl+I` | Bold / italic (selection or word under the cursor) |
 | `Ctrl+M` / `Ctrl+Shift+M` | Inline code / fenced code block |
 | `Tab` / `Shift+Tab` | Indent / outdent — nests list items |
+| `Ctrl+V` | Paste an image → its path lands in the prompt (text pastes as usual) |
 | `Ctrl+R` | Toggle reference panel |
 | `Ctrl+K` | Trigger phrases |
 | `/` | Insert menu — trigger phrases and markdown scaffolding |
@@ -209,6 +215,15 @@ webview gets a deliberately narrow shell surface: `tmux`, plus `orca-ide` and
 `herdr` scoped to individual read/send subcommands. Scoping matters most for
 `herdr` — the same binary can also run arbitrary processes and tear down
 sessions, so it is allowlisted per subcommand rather than wholesale.
+
+Writing files is deliberately narrower than it looks. Saving a pasted image does
+**not** go through the filesystem plugin: its `fs:allow-write-file` permission
+enables three commands at once — `write_file`, `open` and `write` — which, paired
+with the home-directory scope, is a generic open-and-write over your whole home.
+Instead there is one app command that takes bytes and nothing else: the directory
+comes from the app's own data path, the filename is generated, and the format is
+detected from the file signature, so the webview never names a destination. That
+command is listed in the ACL like a plugin one, so it stays visible in the manifest.
 
 Home-directory file access is only safe because of that boundary. The full
 manifest is `src-tauri/capabilities/default.json`.
