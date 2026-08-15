@@ -1,4 +1,8 @@
 ---
+import demoWebm from "../assets/demo/sendoff-demo.webm";
+import demoMp4 from "../assets/demo/sendoff-demo.mp4";
+import demoPoster from "../assets/demo/sendoff-demo-poster.webp";
+
 const RELEASES = "https://github.com/exviolet/sendoff/releases/latest";
 const REPO = "https://github.com/exviolet/sendoff";
 ---
@@ -18,49 +22,82 @@ const REPO = "https://github.com/exviolet/sendoff";
     </div>
 
     <h1 class="rise" style="animation-delay: 0.2s">
-      A real editor for the prompts you send to <em>terminal coding agents</em><span
-        class="caret"
-        aria-hidden="true"></span>
+      Write prompts with <em>room to think.</em><br />
+      Send them where your agents already run.<span class="caret" aria-hidden="true"></span>
     </h1>
 
     <p class="sub rise" style="animation-delay: 0.3s">
-      Draft with room to think, bind a tab to Herdr, Orca, or tmux, and send with
-      <kbd>Ctrl</kbd>&thinsp;+&thinsp;<kbd>Enter</kbd>.
+      Sendoff is a local Linux editor for long prompts. Bind a tab once, then
+      <kbd>Ctrl</kbd>&thinsp;+&thinsp;<kbd>Enter</kbd> sends to Herdr, Orca, or tmux.
     </p>
 
     <div class="actions rise" style="animation-delay: 0.4s">
       <a class="btn primary" href={RELEASES}>
-        Download the AppImage
+        Get the latest AppImage
         <span class="arrow" aria-hidden="true">→</span>
       </a>
-      <a class="btn ghost" href={REPO}>Source on GitHub</a>
+      <a class="btn ghost" href={REPO}>View source</a>
     </div>
 
     <p class="fineprint rise" style="animation-delay: 0.48s">
-      x86_64 &middot; glibc 2.35 or newer &middot; no auto-update
+      x86_64 &middot; glibc 2.35+ &middot; no auto-update
     </p>
 
-    <!-- TODO(демо): сюда встаёт <video> нового дубля (webm + mp4, autoplay muted
-         loop playsinline, poster из первого кадра). Слот держит те же пропорции
-         1000×562, что и запись, поэтому подстановка не тронет вёрстку.
-         Текущий дубль не годится: в кадре виден старый путь `rewrite-desktop`. -->
     <figure class="demo rise" style="animation-delay: 0.56s">
       <div class="demo-frame">
-        <div class="chrome" aria-hidden="true">
-          <span></span><span></span><span></span>
-        </div>
-        <div class="demo-slot">
-          <p class="mono-label">demo</p>
-          <p class="slot-note">
-            Drafting a prompt, then <kbd>Ctrl</kbd>&thinsp;+&thinsp;<kbd>Enter</kbd> — it lands in
-            the tmux pane as one block, already submitted.
-          </p>
-        </div>
+        <video
+          class="demo-video"
+          data-demo-video
+          aria-describedby="demo-description"
+          poster={demoPoster.src}
+          muted
+          loop
+          playsinline
+          controls
+          preload="metadata"
+        >
+          <source src={demoWebm} type="video/webm" />
+          <source src={demoMp4} type="video/mp4" />
+        </video>
       </div>
-      <figcaption class="mono-label">27 seconds, no narration, no cuts</figcaption>
+      <p id="demo-description" class="sr-only">
+        A multi-line prompt is drafted in Sendoff and sent with Ctrl+Enter. The same prompt arrives
+        in the bound terminal agent as one submitted block, and the agent begins its reply.
+      </p>
     </figure>
   </div>
 </header>
+
+<script>
+  const video = document.querySelector<HTMLVideoElement>("[data-demo-video]");
+
+  if (video) {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let visible = false;
+
+    const syncPlayback = () => {
+      if (!visible || reducedMotion.matches) {
+        video.pause();
+        return;
+      }
+
+      void video.play().catch(() => {
+        // При запрете autoplay остаются нативные controls и poster.
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry?.isIntersecting ?? false;
+        syncPlayback();
+      },
+      { threshold: 0.35 },
+    );
+
+    observer.observe(video);
+    reducedMotion.addEventListener("change", syncPlayback);
+  }
+</script>
 
 <style>
   .hero {
@@ -117,11 +154,11 @@ const REPO = "https://github.com/exviolet/sendoff";
   }
 
   h1 {
-    max-width: 20ch;
+    max-width: 17em;
   }
 
-  /* Италик Newsreader — ради него серифная гарнитура тут и стоит: он выделяет
-     «terminal coding agents» не цветом и не жирностью, а сменой голоса. */
+  /* Италик Newsreader выделяет пользовательскую пользу сменой голоса, а не
+     цветом или жирностью. */
   h1 em {
     font-style: italic;
     font-variation-settings: "opsz" 72;
@@ -207,10 +244,8 @@ const REPO = "https://github.com/exviolet/sendoff";
   .fineprint {
     margin-top: var(--gap-sm);
     font-size: 0.78rem;
-    color: var(--ink-faint);
+    color: var(--ink-dim);
   }
-
-  /* --- Слот демо --- */
 
   .demo {
     margin-top: var(--gap-lg);
@@ -226,53 +261,35 @@ const REPO = "https://github.com/exviolet/sendoff";
       0 30px 80px -30px #000;
   }
 
-  .chrome {
-    display: flex;
-    gap: 6px;
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--line-soft);
+  .demo-video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: var(--panel-solid);
   }
 
-  .chrome span {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--line);
-  }
-
-  .demo-slot {
-    aspect-ratio: 1000 / 562;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--gap-sm);
-    padding: var(--gap-md);
-    text-align: center;
-    /* Штриховка «здесь будет запись» — заглушка обязана читаться как заглушка,
-       иначе её забудут заменить. */
-    background-image: repeating-linear-gradient(
-      -45deg,
-      #ffffff05 0 1px,
-      transparent 1px 11px
-    );
-  }
-
-  .slot-note {
-    max-width: 46ch;
-    color: var(--ink-faint);
-    font-size: 0.84rem;
-  }
-
-  figcaption {
-    margin-top: 0.9rem;
-    text-align: right;
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   @media (max-width: 640px) {
     .actions .btn {
       flex: 1 1 100%;
       justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .caret {
+      animation: none;
     }
   }
 </style>

@@ -1,40 +1,42 @@
 ---
-// Галерея заменяет собой список фич: роадмап запрещает пересказывать README, но
-// страница совсем без содержания — пустая обложка. Развязка — показывать кадрами
-// и держать ровно одну строку подписи на кадр.
-//
-// TODO(кадры): снимать с демо-профиля (`demo-seed.json` из rewrite-demo-assets),
-// НЕ с рабочего окна — там 75+ реальных табов с настоящими промптами. Тогда
-// галерея и видео показывают один вымышленный проект и читаются как одна история.
-// `shot` ниже — это и есть список на съёмку.
+import { Image } from "astro:assets";
+import targetPicker from "../assets/gallery/target-picker.webp";
+import workspaces from "../assets/gallery/workspaces.webp";
+import slashMenu from "../assets/gallery/slash-menu.webp";
+import reference from "../assets/gallery/reference.webp";
+
 const shots = [
   {
     id: "target-picker",
-    title: "Pick the agent by name",
+    title: "Send to the right agent",
     caption:
-      "One list, sectioned by source. A source that is not running simply has no section.",
-    shot: "Ctrl+Shift+Enter, секции Herdr / Orca / tmux видны одновременно",
+      "Herdr, Orca, and tmux share one picker. Sources that are not running stay out of the way.",
+    alt: "Target picker listing Herdr, Orca, and tmux agents in separate sections",
+    image: targetPicker,
     span: 2,
   },
   {
     id: "workspaces",
-    title: "Tabs that scale",
-    caption: "Workspaces per project, colour-coded groups, pins that stay put.",
-    shot: "полоса табов с раскрытой группой + пикер workspace поверх",
+    title: "Keep projects apart",
+    caption: "Workspaces, colour-coded groups, and pins keep a long tab strip navigable.",
+    alt: "Sendoff tab bar with grouped and pinned tabs and the workspace picker open",
+    image: workspaces,
     span: 1,
   },
   {
     id: "slash-menu",
-    title: "Structure without leaving the keyboard",
-    caption: "A slash opens phrases and markdown scaffolding right at the caret.",
-    shot: "меню `/` открыто в середине набранного промпта",
+    title: "Shape the prompt in place",
+    caption: "Type / for saved phrases and Markdown scaffolding, inserted right at the caret.",
+    alt: "Slash menu open at the prompt caret with saved phrases and Markdown actions",
+    image: slashMenu,
     span: 1,
   },
   {
     id: "reference",
-    title: "The answer stays in view",
-    caption: "A resizable side panel holds the reply while the next prompt is written.",
-    shot: "reference-панель справа с ответом агента, редактор слева",
+    title: "Keep the answer in view",
+    caption: "Pin the reply beside the editor while you write the follow-up.",
+    alt: "Sendoff editor with an agent reply pinned in the reference panel",
+    image: reference,
     span: 2,
   },
 ];
@@ -44,24 +46,17 @@ const shots = [
   <div class="shell">
     <div class="section-head">
       <span class="num">02</span>
-      <h2>A look at it</h2>
+      <h2>A closer look</h2>
     </div>
 
-    <p class="lede">
-      Four things worth seeing. Everything else is in the README — this page would rather show than
-      list.
-    </p>
+    <p class="lede">Four details the demo moves past.</p>
 
     <div class="grid">
       {
         shots.map((s) => (
           <figure class="shot" data-span={s.span} id={s.id}>
             <div class="frame">
-              {/* TODO(кадры): <Image> вместо заглушки, когда появятся PNG. */}
-              <div class="placeholder">
-                <p class="mono-label">{s.id}</p>
-                <p class="shot-note">{s.shot}</p>
-              </div>
+              <Image src={s.image} alt={s.alt} loading="lazy" decoding="async" />
             </div>
             <figcaption>
               <h3>{s.title}</h3>
@@ -100,44 +95,11 @@ const shots = [
     border-radius: 5px;
     background: var(--panel-solid);
     overflow: hidden;
-    transition:
-      border-color 0.25s var(--ease),
-      transform 0.25s var(--ease);
   }
 
-  .shot:hover .frame {
-    border-color: var(--violet-deep);
-    transform: translateY(-2px);
-  }
-
-  /* Соотношение разное по ширине блока, иначе широкий кадр выходит вдвое выше
-     узкого: удвоенная ширина при общем aspect-ratio даёт удвоенную высоту.
-     Реальные скриншоты придут со своими пропорциями — эти правила только для
-     заглушек, и вместе с ними уйдут. */
-  .placeholder {
-    aspect-ratio: 4 / 3;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: var(--gap-sm);
-    text-align: center;
-    background-image: repeating-linear-gradient(
-      -45deg,
-      #ffffff05 0 1px,
-      transparent 1px 11px
-    );
-  }
-
-  .shot-note {
-    font-size: 0.76rem;
-    color: var(--ink-faint);
-    max-width: 34ch;
-  }
-
-  .shot[data-span="2"] .placeholder {
-    aspect-ratio: 16 / 9;
+  .frame :global(img) {
+    width: 100%;
+    height: auto;
   }
 
   figcaption {
