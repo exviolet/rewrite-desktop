@@ -77,6 +77,93 @@ fn sniff_image_ext(bytes: &[u8]) -> Option<&'static str> {
   None
 }
 
+/// Список бинарей, о которых Doctor вправе спрашивать. Задан ЗДЕСЬ, а не приходит из
+/// вебвью: иначе команда превратилась бы в «проверь наличие произвольного файла» —
+/// generic-проба файловой системы под видом диагностики. Вебвью не передаёт ничего.
+const DIAGNOSED_EXECUTABLES: [&str; 3] = ["tmux", "herdr", "orca-ide"];
+
+#[derive(serde::Serialize)]
+struct ExecutableLocation {
+  name: String,
+  /// Абсолютный путь, если найден. `None` = «в PATH процесса Sendoff нет».
+  path: Option<String>,
+}
+
+/// Где лежат бинари терминальных провайдеров — по PATH ЭТОГО процесса.
+///
+/// Зачем отдельно от `listTargets()`: tauri-plugin-shell схлопывает все варианты
+/// `scope::Error` в одно `ProgramNotAllowed` (`commands.rs`, настоящая причина живёт
+/// только под `#[cfg(debug_assertions)]`), поэтому «бинаря нет» и «запрещено scope» по
+/// тексту не различить. Наличие файла — второй, независимый и структурированный сигнал:
+/// связка «найден + discovery упал» уже означает не отсутствие программы, а отказ scope
+/// или саму программу. Разбирать строки ошибок регулярками не требуется.
+///
+/// Процесс НЕ запускается: только обход PATH и проверка бита исполняемости. Отвечает на
+/// вопрос «виден ли бинарь Sendoff'у», а не «установлен ли он в системе» — у GUI-запуска
+/// PATH урезанный (ровно поэтому выше в `run()` дотягивается ~/.local/bin).
+#[tauri::command]
+fn locate_executables() -> Vec<ExecutableLocation> {
+  DIAGNOSED_EXECUTABLES
+    .iter()
+    .map(|name| ExecutableLocation {
+      name: (*name).to_string(),
+      path: which(name).and_then(|p| p.to_str().map(str::to_owned)),
+    })
+    .collect()
+}
+
+fn which(name: &str) -> Option<std::path::PathBuf> {
+  let path = std::env::var_os("PATH")?;
+  std::env::split_paths(&path)
+    .map(|dir| dir.join(name))
+    .find(|candidate| is_executable_file(candidate))
+}
+
+fn is_executable_file(path: &std::path::Path) -> bool {
+  let Ok(meta) = std::fs::metadata(path) else {
+    return false; // битая симлинка или нет прав на каталог — считаем, что не нашли
+  };
+  if !meta.is_file() {
+    return false;
+  }
+  #[cfg(unix)]
+  {
+    use std::os::unix::fs::PermissionsExt;
+    return meta.permissions().mode() & 0o111 != 0;
+  }
+  #[cfg(not(unix))]
+  {
+    true
+  }
+}
+
+/// Версия WebKitGTK, под которой РЕАЛЬНО работает вебвью.
+///
+/// Нужна Doctor'у не для красоты: штатный отказ чтения IndexedDB (см. StorageErrorBanner)
+/// происходит, когда базу писал более новый WebKit, чем тот, что её открывает. Из JS эта
+/// версия недоступна — WebKitGTK репортит в User-Agent фиксированное Safari-compat число.
+#[tauri::command]
+fn webkit_version() -> Option<String> {
+  #[cfg(target_os = "linux")]
+  {
+    // SAFETY: три FFI-геттера webkit2gtk без аргументов и побочных эффектов, возвращают
+    // константы, вкомпилированные в саму библиотеку. Библиотека уже загружена — вебвью
+    // на ней и работает.
+    let (major, minor, micro) = unsafe {
+      (
+        webkit2gtk_sys::webkit_get_major_version(),
+        webkit2gtk_sys::webkit_get_minor_version(),
+        webkit2gtk_sys::webkit_get_micro_version(),
+      )
+    };
+    Some(format!("{major}.{minor}.{micro}"))
+  }
+  #[cfg(not(target_os = "linux"))]
+  {
+    None
+  }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   // WebKitGTK (Linux): DMABUF-рендерер даёт tearing/артефакты при скролле на части
@@ -182,7 +269,11 @@ pub fn run() {
   }
 
   builder
-    .invoke_handler(tauri::generate_handler![save_clipboard_image])
+    .invoke_handler(tauri::generate_handler![
+      save_clipboard_image,
+      locate_executables,
+      webkit_version
+    ])
     .setup(|app| {
       if cfg!(debug_assertions) {
         app.handle().plugin(
