@@ -28,3 +28,7 @@ HANDOFF.md
 
 # сборка release-артефактов в контейнере (см. Dockerfile)
 src-tauri/target-docker
+
+.impeccable/
+.superpowers/
+
