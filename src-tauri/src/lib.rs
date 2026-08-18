@@ -114,9 +114,15 @@ fn locate_executables() -> Vec<ExecutableLocation> {
 
 fn which(name: &str) -> Option<std::path::PathBuf> {
   let path = std::env::var_os("PATH")?;
-  std::env::split_paths(&path)
+  let found = std::env::split_paths(&path)
     .map(|dir| dir.join(name))
-    .find(|candidate| is_executable_file(candidate))
+    .find(|candidate| is_executable_file(candidate))?;
+
+  // Канонизация обязательна, иначе отчёт уводит в ложный след: на Arch `/usr/sbin` —
+  // симлинка на `/usr/bin`, и первое совпадение по PATH даёт `/usr/sbin/tmux`. Путь
+  // верный, но читается как аномалия. Заодно видно, на какую сборку смотрит символьная
+  // ссылка из ~/.local/bin. Отказ канонизации не теряем: показываем найденное как есть.
+  Some(std::fs::canonicalize(&found).unwrap_or(found))
 }
 
 fn is_executable_file(path: &std::path::Path) -> bool {
