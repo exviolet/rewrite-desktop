@@ -29,6 +29,13 @@ tauri-plugin-fs = "2"
 tauri-plugin-shell = "2"
 tauri-plugin-mcp-bridge = { version = "0.11", optional = true }
 
+# Только ради версии WebKitGTK для Sendoff Doctor: safe-обёртка `webkit2gtk` версий не
+# экспортирует, а `navigator.userAgent` отдаёт фиксированное Safari-compat число
+# (AppleWebKit/605.1.15) — по нему 2.44 от 2.46 не отличить. Крейт уже присутствует в
+# Cargo.lock транзитивно (wry → webkit2gtk → -sys), поэтому объявление ничего не досбирает.
+[target.'cfg(target_os = "linux")'.dependencies]
+webkit2gtk-sys = "2.0"
+
 [features]
 # dev-only MCP-мост (tauri-plugin-mcp-bridge): включается через `--features mcp-bridge`
 # в dev-скрипте, в release-сборке отсутствует физически.

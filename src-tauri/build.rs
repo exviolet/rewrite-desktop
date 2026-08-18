@@ -5,7 +5,7 @@ fn main() {
   // её приходится выдать в манифесте явно, как плагинную.
   tauri_build::try_build(
     tauri_build::Attributes::new()
-      .app_manifest(tauri_build::AppManifest::new().commands(&["save_clipboard_image"])),
+      .app_manifest(tauri_build::AppManifest::new().commands(&["save_clipboard_image", "locate_executables", "webkit_version"])),
   )
   .expect("failed to run tauri-build")
 }
